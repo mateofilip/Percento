@@ -9,7 +9,13 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Input } from "./ui/input";
-import { Select } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const formatNumber = (value) => {
   if (!Number.isFinite(value)) return String(value);
@@ -18,69 +24,68 @@ const formatNumber = (value) => {
 
 const createEmptyResult = () => ({ placeholder: true });
 
-const ResultPanel = ({ result }) => {
+const AnswerDisplay = ({ result, placeholderValue = "0" }) => {
   const output = result ?? createEmptyResult();
 
-  if (output.placeholder) {
-    return (
-      <div className="mt-5 min-h-[112px] rounded-lg border border-dashed border-gray-200 bg-gradient-to-b from-white to-gray-50 p-4 text-center">
-        <div className="flex h-full flex-col items-center justify-center gap-2">
-          <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-600 shadow-sm shadow-black/5">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-            Live result
-          </div>
-          <p className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-3xl font-extrabold text-transparent">
-            —
-          </p>
-          <p className="text-sm text-gray-600">
-            Type in the fields to see the answer instantly.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  const isPlaceholder = Boolean(output.placeholder);
+  const hasError = Boolean(output.error);
+  const value =
+    !isPlaceholder && !hasError && typeof output.value === "string"
+      ? output.value
+      : placeholderValue;
 
   return (
-    <div className="mt-5 min-h-[112px] rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
-      {output.error ? (
-        <p className="text-sm font-medium text-red-600">{output.error}</p>
-      ) : (
-        <>
-          <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-            Result
-          </p>
-          <p className="my-2 text-3xl font-extrabold text-blue-600">
-            {output.value}
-          </p>
-          <p className="text-sm text-gray-700">{output.explanation}</p>
-        </>
-      )}
+    <div className="h-fit border-t border-gray-200 pt-4">
+      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+        Answer
+      </p>
+      <p
+        className={
+          isPlaceholder || hasError
+            ? "mt-2 select-none text-5xl font-semibold tabular-nums text-gray-200"
+            : "mt-2 text-5xl font-semibold tabular-nums text-gray-900"
+        }
+      >
+        {value}
+      </p>
+      {hasError ? (
+        <p className="mt-2 text-sm font-medium text-red-600">{output.error}</p>
+      ) : null}
     </div>
   );
 };
 
-const CalculatorFrame = ({ title, description, children, result, onClear }) => {
+const CalculatorFrame = ({
+  title,
+  description,
+  children,
+  result,
+  onClear,
+  answerPlaceholder,
+}) => {
   return (
-    <Card className="flex h-full flex-col">
-      <CardHeader className="relative">
+    <Card className="flex h-full flex-col rounded-xl border border-gray-200 bg-white shadow-lg hover:shadow-xl transition-shadow duration-200 ease-out shadow-black/5">
+      <CardHeader className="flex flex-row justify-between items-center border-b border-gray-200 bg-gray-50/60 ">
+        <div>
+          <CardTitle className=" text-lg">{title}</CardTitle>
+          <CardDescription className="text-xs">{description}</CardDescription>
+        </div>
         <Button
           type="button"
           variant="ghost"
           size="sm"
-          className="absolute right-4 top-4 rounded-full px-3 text-gray-500 hover:text-gray-900"
+          className=" rounded-md px-2 text-gray-500 hover:text-gray-900"
           onClick={onClear}
         >
           Clear
         </Button>
-        <CardTitle className="text-center text-xl">{title}</CardTitle>
-        <CardDescription className="text-center">{description}</CardDescription>
       </CardHeader>
 
-      <CardContent className="flex flex-1 flex-col">
-        <div className="flex flex-col items-center gap-4">{children}</div>
-        <div className="mt-auto">
-          <ResultPanel result={result} />
+      <CardContent className="flex flex-col flex-1">
+        <div className="h-full items-center justify-center grid gap-5 py-6">
+          {children}
         </div>
+        <AnswerDisplay result={result} placeholderValue={answerPlaceholder} />
       </CardContent>
     </Card>
   );
@@ -124,12 +129,13 @@ const PercentOfCard = () => {
 
   return (
     <CalculatorFrame
-      title="Percentage Of"
+      title="Percentage of..."
       description="What is X% of Y?"
       result={result}
       onClear={clear}
+      answerPlaceholder="0"
     >
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="flex w-full flex-wrap items-center justify-start gap-2">
         <span className="text-gray-700">What is</span>
         <Input
           inputMode="decimal"
@@ -137,7 +143,7 @@ const PercentOfCard = () => {
           step="any"
           value={percent}
           onChange={(e) => setPercent(e.target.value)}
-          className="w-24 text-center text-lg"
+          className="w-20 text-center text-lg"
           placeholder="0"
         />
         <span className="text-gray-700">% of</span>
@@ -147,7 +153,7 @@ const PercentOfCard = () => {
           step="any"
           value={base}
           onChange={(e) => setBase(e.target.value)}
-          className="w-28 text-center text-lg"
+          className="w-20 text-center text-lg"
           placeholder="0"
         />
         <span className="text-gray-700">?</span>
@@ -202,15 +208,16 @@ const WhatPercentCard = () => {
       description="X is what % of Y?"
       result={result}
       onClear={clear}
+      answerPlaceholder="0%"
     >
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="flex w-full flex-wrap items-center justify-start gap-2">
         <Input
           inputMode="decimal"
           type="number"
           step="any"
           value={part}
           onChange={(e) => setPart(e.target.value)}
-          className="w-28 text-center text-lg"
+          className="w-20 text-center text-lg"
           placeholder="0"
         />
         <span className="text-gray-700">is what % of</span>
@@ -220,7 +227,7 @@ const WhatPercentCard = () => {
           step="any"
           value={whole}
           onChange={(e) => setWhole(e.target.value)}
-          className="w-28 text-center text-lg"
+          className="w-20 text-center text-lg"
           placeholder="0"
         />
         <span className="text-gray-700">?</span>
@@ -276,10 +283,11 @@ const PercentageChangeCard = () => {
       description="Percentage increase/decrease from X to Y"
       result={result}
       onClear={clear}
+      answerPlaceholder="0%"
     >
       <div className="flex w-full max-w-sm flex-col gap-3">
         <div className="flex items-center gap-2">
-          <span className="w-14 text-sm text-gray-700">From</span>
+          <span className="w-14 text-sm text-gray-700">From... </span>
           <Input
             inputMode="decimal"
             type="number"
@@ -291,7 +299,7 @@ const PercentageChangeCard = () => {
           />
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-14 text-sm text-gray-700">To</span>
+          <span className="w-14 text-sm text-gray-700 text-right">to... </span>
           <Input
             inputMode="decimal"
             type="number"
@@ -349,19 +357,20 @@ const FindTotalCard = () => {
 
   return (
     <CalculatorFrame
-      title="Find Total"
+      title="Find Total of..."
       description="X is Y% of what?"
       result={result}
       onClear={clear}
+      answerPlaceholder="0"
     >
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="flex w-full flex-wrap items-center justify-start gap-2">
         <Input
           inputMode="decimal"
           type="number"
           step="any"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="w-28 text-center text-lg"
+          className="w-20 text-center text-lg"
           placeholder="0"
         />
         <span className="text-gray-700">is</span>
@@ -371,7 +380,7 @@ const FindTotalCard = () => {
           step="any"
           value={percent}
           onChange={(e) => setPercent(e.target.value)}
-          className="w-24 text-center text-lg"
+          className="w-20 text-center text-lg"
           placeholder="0"
         />
         <span className="text-gray-700">% of what?</span>
@@ -432,6 +441,7 @@ const PercentageDifferenceCard = () => {
       description="Difference between A and B"
       result={result}
       onClear={clear}
+      answerPlaceholder="0%"
     >
       <div className="flex w-full max-w-sm flex-col gap-3">
         <Input
@@ -507,6 +517,7 @@ const ValueChangeCard = () => {
       description="X increased/decreased by Y% equals what?"
       result={result}
       onClear={clear}
+      answerPlaceholder="0"
     >
       <div className="flex w-full max-w-sm flex-col gap-3">
         <Input
@@ -518,9 +529,14 @@ const ValueChangeCard = () => {
           className="text-center text-lg"
           placeholder="Start value"
         />
-        <Select value={operator} onChange={(e) => setOperator(e.target.value)}>
-          <option value="increase">Increase by</option>
-          <option value="decrease">Decrease by</option>
+        <Select value={operator} onValueChange={setOperator}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="increase">Increase by</SelectItem>
+            <SelectItem value="decrease">Decrease by</SelectItem>
+          </SelectContent>
         </Select>
         <div className="flex items-center gap-2">
           <Input
@@ -551,7 +567,7 @@ const PercentageCalculator = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid auto-rows-fr grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <PercentOfCard />
         <WhatPercentCard />
         <PercentageChangeCard />
