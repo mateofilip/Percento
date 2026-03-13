@@ -38,9 +38,9 @@ const AnswerDisplay = ({ result, placeholderValue = "0" }) => {
   const valueSizeClass =
     digitCount > 18
       ? "text-2xl"
-      : digitCount > 14
+      : digitCount > 13
       ? "text-3xl"
-      : digitCount > 10
+      : digitCount > 9
       ? "text-4xl"
       : "text-5xl";
 
@@ -71,13 +71,13 @@ const AnswerDisplay = ({ result, placeholderValue = "0" }) => {
 
   return (
     <div className="h-fit border-t border-gray-200 pt-4">
-      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+      <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
         Answer
       </p>
       <p
         className={
           isPlaceholder || hasError
-            ? `mt-2 w-full select-none whitespace-nowrap overflow-hidden text-clip font-semibold tabular-nums leading-none tracking-tight text-orange-400/25 transition-transform duration-200 ease-out ${valueSizeClass}`
+            ? `mt-2 w-full select-none whitespace-nowrap overflow-hidden text-clip font-semibold tabular-nums leading-none tracking-tight text-orange-400/40 transition-transform duration-200 ease-out ${valueSizeClass}`
             : `mt-2 w-full whitespace-nowrap overflow-hidden text-clip font-semibold tabular-nums leading-none tracking-tight text-orange-400 transition-transform duration-200 ease-out ${valueSizeClass} ${
                 isBumping ? "scale-105" : "scale-100"
               }`
@@ -100,62 +100,208 @@ const CalculatorFrame = ({
   onClear,
   answerPlaceholder,
 }) => {
+  const canCopy =
+    Boolean(result) &&
+    !Boolean(result?.placeholder) &&
+    !Boolean(result?.error) &&
+    typeof result?.value === "string";
+
   const [isClearAnimating, setIsClearAnimating] = useState(false);
+  const [isClearDone, setIsClearDone] = useState(false);
   const [clearNonce, setClearNonce] = useState(0);
   const clearTimeoutRef = useRef(null);
+  const clearDoneTimeoutRef = useRef(null);
+
+  const [isCopyAnimating, setIsCopyAnimating] = useState(false);
+  const [isCopyDone, setIsCopyDone] = useState(false);
+  const [copyNonce, setCopyNonce] = useState(0);
+  const copyTimeoutRef = useRef(null);
+  const copyDoneTimeoutRef = useRef(null);
 
   const handleClear = () => {
     setClearNonce((current) => current + 1);
     setIsClearAnimating(true);
+    setIsClearDone(true);
     if (clearTimeoutRef.current) clearTimeout(clearTimeoutRef.current);
     clearTimeoutRef.current = setTimeout(() => {
       setIsClearAnimating(false);
     }, 220);
+    if (clearDoneTimeoutRef.current) clearTimeout(clearDoneTimeoutRef.current);
+    clearDoneTimeoutRef.current = setTimeout(() => {
+      setIsClearDone(false);
+    }, 900);
     onClear();
+  };
+
+  const handleCopy = async () => {
+    if (!canCopy) return;
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(result.value);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = result.value;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        textarea.style.top = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
+      setCopyNonce((current) => current + 1);
+      setIsCopyAnimating(true);
+      setIsCopyDone(true);
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = setTimeout(() => {
+        setIsCopyAnimating(false);
+      }, 220);
+      if (copyDoneTimeoutRef.current) clearTimeout(copyDoneTimeoutRef.current);
+      copyDoneTimeoutRef.current = setTimeout(() => {
+        setIsCopyDone(false);
+      }, 900);
+    } catch {
+      setIsCopyAnimating(false);
+      setIsCopyDone(false);
+    }
   };
 
   useEffect(() => {
     return () => {
       if (clearTimeoutRef.current) clearTimeout(clearTimeoutRef.current);
+      if (clearDoneTimeoutRef.current)
+        clearTimeout(clearDoneTimeoutRef.current);
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+      if (copyDoneTimeoutRef.current) clearTimeout(copyDoneTimeoutRef.current);
     };
   }, []);
 
   return (
-    <Card className="flex h-full flex-col rounded-xl group hover:rounded-3xl border border-gray-200 bg-white shadow-lg hover:shadow-xl transition-all duration-200 ease-out">
-      <CardHeader className="flex flex-row justify-between items-center border-b border-gray-200 bg-orange-400 rounded-t-xl group-hover:rounded-t-3xl transition-all duration-200 ease-out ">
+    <Card className="flex h-full flex-col rounded-xl group hover:rounded-3xl border border-white/40 bg-black/15 shadow-lg shadow-black/10 backdrop-blur-xl hover:shadow-xl transition-all duration-200 ease-out">
+      <CardHeader className="flex flex-row justify-between items-center border-b border-white/20 bg-orange-400/90 backdrop-blur-xl rounded-t-xl group-hover:rounded-t-3xl transition-all duration-200 ease-out">
         <div>
           <CardTitle className=" text-lg text-white">{title}</CardTitle>
           <CardDescription className="text-xs text-white/65">
             {description}
           </CardDescription>
         </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className={`rounded-full py-5 text-white/80 bg-orange-800/20 transition-all hover:bg-orange-800/30 duration-200 ease-out ${
-            isClearAnimating ? "scale-105" : "scale-100"
-          }`}
-          onClick={handleClear}
-        >
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 15 15"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className={`h-4 w-4  ${
-              isClearAnimating ? "animate-[spin_0.35s_ease-in-out_1]" : ""
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            disabled={!canCopy}
+            aria-label="Copy result"
+            title={canCopy ? "Copy result" : "Nothing to copy yet"}
+            className={`rounded-full py-5 text-white/80 bg-orange-800/20 transition-all hover:bg-orange-800/30 duration-200 ease-out disabled:opacity-40 ${
+              isCopyAnimating ? "scale-105" : "scale-100"
             }`}
+            onClick={handleCopy}
           >
-            <path
-              d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z"
-              fill="currentColor"
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
-        </Button>
+            <span className="relative h-4 w-4">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 15 15"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`absolute inset-0 h-4 w-4 transition-all duration-150 ${
+                  isCopyDone ? "scale-75 opacity-0" : "scale-100 opacity-100"
+                } ${
+                  isCopyAnimating ? "animate-[spin_0.35s_ease-in-out_1]" : ""
+                }`}
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 1.5C5 1.22386 5.22386 1 5.5 1H11.5C11.7761 1 12 1.22386 12 1.5V9.5C12 9.77614 11.7761 10 11.5 10H5.5C5.22386 10 5 9.77614 5 9.5V1.5ZM6 2V9H11V2H6Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                />
+                <path
+                  d="M3 5.5C3 5.22386 3.22386 5 3.5 5H4V6H4V11H9V11.5C9 11.7761 8.77614 12 8.5 12H3.5C3.22386 12 3 11.7761 3 11.5V5.5Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <svg
+                key={copyNonce}
+                width="15"
+                height="15"
+                viewBox="0 0 15 15"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`absolute inset-0 h-4 w-4 text-white transition-all duration-150 ${
+                  isCopyDone ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                }`}
+                aria-hidden="true"
+              >
+                <path
+                  d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </span>
+          </Button>
+
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            aria-label="Clear inputs"
+            title="Clear"
+            className={`rounded-full py-5 text-white/80 bg-orange-800/20 transition-all hover:bg-orange-800/30 duration-200 ease-out ${
+              isClearAnimating ? "scale-105" : "scale-100"
+            }`}
+            onClick={handleClear}
+          >
+            <span className="relative h-4 w-4">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 15 15"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`absolute inset-0 h-4 w-4 transition-all duration-150 ${
+                  isClearDone ? "scale-75 opacity-0" : "scale-100 opacity-100"
+                }`}
+                aria-hidden="true"
+              >
+                <path
+                  d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <svg
+                key={clearNonce}
+                width="15"
+                height="15"
+                viewBox="0 0 15 15"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`absolute inset-0 h-4 w-4 text-white transition-all duration-150 ${
+                  isClearDone ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                }`}
+                aria-hidden="true"
+              >
+                <path
+                  d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </span>
+          </Button>
+        </div>
       </CardHeader>
 
       <CardContent className="flex flex-col flex-1">
@@ -213,7 +359,7 @@ const PercentOfCard = () => {
       answerPlaceholder="0"
     >
       <div className="flex w-full flex-wrap items-center justify-start gap-2">
-        <span className="text-gray-700">What is</span>
+        <span className="text-white/80">What is</span>
         <Input
           inputMode="decimal"
           type="number"
@@ -223,7 +369,7 @@ const PercentOfCard = () => {
           className="w-20 text-center text-lg"
           placeholder="0"
         />
-        <span className="text-gray-700">% of</span>
+        <span className="text-white/80">% of</span>
         <Input
           inputMode="decimal"
           type="number"
@@ -233,7 +379,7 @@ const PercentOfCard = () => {
           className="w-20 text-center text-lg"
           placeholder="0"
         />
-        <span className="text-gray-700">?</span>
+        <span className="text-white/80">?</span>
       </div>
     </CalculatorFrame>
   );
@@ -297,7 +443,7 @@ const WhatPercentCard = () => {
           className="w-20 text-center text-lg"
           placeholder="0"
         />
-        <span className="text-gray-700">is what % of</span>
+        <span className="text-white/80">is what % of</span>
         <Input
           inputMode="decimal"
           type="number"
@@ -307,7 +453,7 @@ const WhatPercentCard = () => {
           className="w-20 text-center text-lg"
           placeholder="0"
         />
-        <span className="text-gray-700">?</span>
+        <span className="text-white/80">?</span>
       </div>
     </CalculatorFrame>
   );
@@ -364,7 +510,7 @@ const PercentageChangeCard = () => {
     >
       <div className="flex w-full max-w-sm flex-col gap-3">
         <div className="flex items-center gap-2">
-          <span className="w-14 text-sm text-gray-700">From... </span>
+          <span className="w-14 text-sm text-white/80">From... </span>
           <Input
             inputMode="decimal"
             type="number"
@@ -376,7 +522,7 @@ const PercentageChangeCard = () => {
           />
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-14 text-sm text-gray-700 text-right">to... </span>
+          <span className="w-14 text-sm text-white/80 text-right">to... </span>
           <Input
             inputMode="decimal"
             type="number"
@@ -450,7 +596,7 @@ const FindTotalCard = () => {
           className="w-20 text-center text-lg"
           placeholder="0"
         />
-        <span className="text-gray-700">is</span>
+        <span className="text-white/80">is</span>
         <Input
           inputMode="decimal"
           type="number"
@@ -460,7 +606,7 @@ const FindTotalCard = () => {
           className="w-20 text-center text-lg"
           placeholder="0"
         />
-        <span className="text-gray-700">% of what?</span>
+        <span className="text-white">% of what?</span>
       </div>
     </CalculatorFrame>
   );
@@ -488,17 +634,20 @@ const PercentageDifferenceCard = () => {
       return;
     }
 
-    const avg = (v1 + v2) / 2;
-    if (avg === 0) {
-      setResult({ error: "Average of values cannot be zero" });
+    const base = Math.min(Math.abs(v1), Math.abs(v2));
+    if (base === 0) {
+      setResult({
+        value: "∞%",
+        explanation: `Difference between ${v1} and ${v2} relative to the smaller value is infinite`,
+      });
       return;
     }
 
-    const diff = (Math.abs(v1 - v2) / Math.abs(avg)) * 100;
+    const diff = (Math.abs(v1 - v2) / base) * 100;
     const formatted = `${diff.toFixed(2)}%`;
     setResult({
       value: formatted,
-      explanation: `Difference between ${v1} and ${v2} is ${formatted}`,
+      explanation: `Difference between ${v1} and ${v2} relative to the smaller value is ${formatted}`,
     });
   };
 
@@ -625,7 +774,7 @@ const ValueChangeCard = () => {
             className="text-center text-lg"
             placeholder="0"
           />
-          <span className="text-sm text-gray-700">%</span>
+          <span className="text-sm text-white">%</span>
         </div>
       </div>
     </CalculatorFrame>
