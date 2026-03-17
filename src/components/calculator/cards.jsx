@@ -200,7 +200,7 @@ const PercentageChangeCard = () => {
   return (
     <CalculatorFrame
       title="Percentage Change"
-      description="Percentage increase/decrease from X to Y"
+      description="Percentage change from X to Y"
       result={result}
       onClear={clear}
       answerPlaceholder="0%"
@@ -437,7 +437,7 @@ const ValueChangeCard = () => {
   return (
     <CalculatorFrame
       title="Increase/Decrease Value"
-      description="X increased/decreased by Y% equals what?"
+      description="X ± Y% equals what?"
       result={result}
       onClear={clear}
       answerPlaceholder="0"
@@ -486,4 +486,3 @@ export {
   ValueChangeCard,
   WhatPercentCard,
 };
-

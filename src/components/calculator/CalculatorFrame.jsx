@@ -171,9 +171,9 @@ const IconSwapButton = ({
         </span>
       </Button>
       <span className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 w-max max-w-56 whitespace-nowrap opacity-0 transition-all duration-200 translate-y-1 group-hover/tooltip:opacity-100 group-hover/tooltip:translate-y-0">
-        <span className="relative block rounded-xl  bg-slate-900 border border-gray-900 p-2 text-xs font-medium text-white shadow-lg">
+        <span className="relative block rounded-xl  bg-neutral-900 border border-gray-900 p-2 text-xs text-white shadow-lg font-semibold">
           {tooltipText}
-          <span className="absolute -bottom-1 right-3 h-2 w-2 rotate-45 border-b border-r border-black bg-gray-900" />
+          <span className="absolute -bottom-1 right-3 h-2 w-2 rotate-45 border-b border-r border-gray-900 bg-neutral-900" />
         </span>
       </span>
     </span>
