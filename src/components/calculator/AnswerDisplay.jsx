@@ -53,10 +53,12 @@ const AnswerDisplay = ({ result, placeholderValue = "0" }) => {
         Answer
       </p>
       <p
+        aria-live="polite"
+        aria-atomic="true"
         className={
           isPlaceholder || hasError
-            ? `mt-2 w-full select-none whitespace-nowrap overflow-hidden text-clip font-semibold tabular-nums leading-none tracking-tight text-orange-400/40 transition-transform duration-200 ease-out ${valueSizeClass}`
-            : `mt-2 w-full whitespace-nowrap overflow-hidden text-clip font-semibold tabular-nums leading-none tracking-tight text-orange-400 transition-transform duration-200 ease-out ${valueSizeClass} ${
+            ? `mt-2 w-full select-none whitespace-nowrap overflow-hidden text-clip font-semibold tabular-nums leading-none tracking-tight text-orange-400/40 transition-transform duration-200 ease-out motion-reduce:transition-none ${valueSizeClass}`
+            : `mt-2 w-full whitespace-nowrap overflow-hidden text-clip font-semibold tabular-nums leading-none tracking-tight text-orange-400 transition-transform duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none ${valueSizeClass} ${
                 isBumping ? "scale-105" : "scale-100"
               }`
         }
@@ -64,11 +66,12 @@ const AnswerDisplay = ({ result, placeholderValue = "0" }) => {
         {value}
       </p>
       {hasError ? (
-        <p className="mt-2 text-sm font-medium text-red-600">{output.error}</p>
+        <p role="alert" className="mt-2 text-sm font-medium text-red-600">
+          {output.error}
+        </p>
       ) : null}
     </div>
   );
 };
 
 export { AnswerDisplay };
-

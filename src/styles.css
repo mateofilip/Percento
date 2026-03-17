@@ -74,3 +74,10 @@ html {
     background-position: 0% 50%;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-animation {
+    animation: none;
+    background-size: cover;
+  }
+}

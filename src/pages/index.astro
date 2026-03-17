@@ -1,5 +1,6 @@
 ---
 import PercentageCalculator from '../components/PercentageCalculator.jsx';
+import StackInfo from '../components/StackInfo.jsx';
 import '../styles.css'
 ---
 
@@ -8,14 +9,25 @@ import '../styles.css'
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Percentage Calculator</title>
+		<meta name="description" content="Fast percentage calculator: percent of a number, percentage change, percentage difference, and more." />
+		<meta name="robots" content="index,follow" />
+		<meta name="theme-color" content="#0f172a" />
+		<meta name="color-scheme" content="dark light" />
+		<meta property="og:title" content="Percentage Calculator" />
+		<meta property="og:description" content="Fast percentage calculator: percent of a number, percentage change, percentage difference, and more." />
+		<meta property="og:type" content="website" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content="Percentage Calculator" />
+		<meta name="twitter:description" content="Fast percentage calculator: percent of a number, percentage change, percentage difference, and more." />
 	</head>
-	<body class=" h-dvh grid place-items-center p-4 bg-animation">
+	<body class="h-dvh grid place-items-center p-4 bg-animation">
 		
 		<main>
 			<PercentageCalculator client:load />
+			<StackInfo client:load />
 		</main>
 	</body>
 </html>
