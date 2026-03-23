@@ -64,7 +64,7 @@ export default function StackInfo() {
     { name: "Astro", description: "Web Framework" },
     { name: "React", description: "UI Library" },
     { name: "Tailwind CSS", description: "Styling" },
-    { name: "Leaflet", description: "Interactive Maps" },
+    { name: "shadcn/ui", description: "UI Components" },
     { name: "Vercel", description: "Infrastructure" },
   ];
 

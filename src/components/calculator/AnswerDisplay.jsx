@@ -48,7 +48,7 @@ const AnswerDisplay = ({ result, placeholderValue = "0" }) => {
   }, [value, isPlaceholder, hasError]);
 
   return (
-    <div className="h-fit border-t border-gray-200 pt-4">
+    <div className="h-1/2 border-t border-gray-200 pt-4">
       <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
         Answer
       </p>
