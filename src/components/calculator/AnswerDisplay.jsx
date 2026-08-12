@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react";
+
 import { createEmptyResult } from "./utils";
 
 const AnswerDisplay = ({ result, placeholderValue = "0" }) => {
@@ -47,26 +49,39 @@ const AnswerDisplay = ({ result, placeholderValue = "0" }) => {
     };
   }, [value, isPlaceholder, hasError]);
 
+  const showDirection = !isPlaceholder && !hasError && output.direction;
+
   return (
-    <div className="h-1/2 border-t border-gray-200 pt-4">
-      <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
+    <div className="h-24 shrink-0 border-t border-stone-200/80 pt-4 dark:border-stone-800">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-500 dark:text-stone-400">
         Answer
       </p>
-      <p
-        aria-live="polite"
-        aria-atomic="true"
-        className={
-          isPlaceholder || hasError
-            ? `mt-2 w-full select-none whitespace-nowrap overflow-hidden text-clip font-semibold tabular-nums leading-none tracking-tight text-orange-400/40 transition-transform duration-200 ease-out motion-reduce:transition-none ${valueSizeClass}`
-            : `mt-2 w-full whitespace-nowrap overflow-hidden text-clip font-semibold tabular-nums leading-none tracking-tight text-orange-400 transition-transform duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none ${valueSizeClass} ${
-                isBumping ? "scale-105" : "scale-100"
-              }`
-        }
-      >
-        {value}
-      </p>
+      <div className="mt-1.5 flex items-center gap-2">
+        {showDirection ? (
+          <span className="text-orange-600 dark:text-orange-400">
+            {output.direction === "up" ? (
+              <ArrowUpRight size={20} weight="bold" />
+            ) : (
+              <ArrowDownRight size={20} weight="bold" />
+            )}
+          </span>
+        ) : null}
+        <p
+          aria-live="polite"
+          aria-atomic="true"
+          className={
+            isPlaceholder || hasError
+              ? `w-full select-none overflow-hidden whitespace-nowrap text-clip font-semibold leading-none tabular-nums tracking-tight text-orange-400 transition-transform duration-200 ease-out motion-reduce:transition-none dark:text-orange-500/60 ${valueSizeClass}`
+              : `w-full overflow-hidden whitespace-nowrap text-clip font-semibold leading-none tabular-nums tracking-tight text-orange-600 transition-transform duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none dark:text-orange-400 ${valueSizeClass} ${
+                  isBumping ? "scale-105" : "scale-100"
+                }`
+          }
+        >
+          {value}
+        </p>
+      </div>
       {hasError ? (
-        <p role="alert" className="mt-2 text-sm font-medium text-red-600">
+        <p role="alert" className="mt-1 text-sm font-medium text-red-600 dark:text-red-400">
           {output.error}
         </p>
       ) : null}

@@ -1,44 +1,230 @@
 ---
-import PercentageCalculator from '../components/PercentageCalculator.jsx';
-import StackInfo from '../components/StackInfo.jsx';
-import '../styles.css'
+import PercentageCalculator from "../components/PercentageCalculator.jsx";
+import StackInfo from "../components/StackInfo.jsx";
+import "../styles.css";
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
 const socialImageUrl = new URL("/site.png", Astro.site).toString();
+const description =
+  "Fast percentage calculator: percent of a number, percentage change, percentage difference, and more. No sign-up, works offline.";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=1" />
-		<link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?v=1" />
-		<link rel="apple-touch-icon" href="/favicon.png?v=1" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Percento</title>
-		<link rel="canonical" href={canonicalUrl} />
-		<meta name="description" content="Fast percentage calculator: percent of a number, percentage change, percentage difference, and more." />
-		<meta name="robots" content="index,follow" />
-		<meta name="theme-color" content="#0f172a" />
-		<meta name="color-scheme" content="dark light" />
-		<meta property="og:title" content="Percento" />
-		<meta property="og:description" content="Fast percentage calculator: percent of a number, percentage change, percentage difference, and more." />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content={canonicalUrl} />
-		<meta property="og:image" content={socialImageUrl} />
-		<meta property="og:image:alt" content="Percento — quick percentage tools" />
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="Percento" />
-		<meta name="twitter:description" content="Fast percentage calculator: percent of a number, percentage change, percentage difference, and more." />
-		<meta name="twitter:url" content={canonicalUrl} />
-		<meta name="twitter:image" content={socialImageUrl} />
-		<meta name="twitter:image:alt" content="Percento — quick percentage tools" />
-	</head>
-	<body class="min-h-dvh grid place-items-center p-4 bg-animation">
-		
-		<main>
-			<PercentageCalculator client:load />
-			<StackInfo client:load />
-		</main>
-	</body>
+    <head>
+        <meta charset="utf-8" />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/favicon.png?v=1"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/favicon.png?v=1"
+        />
+        <link rel="apple-touch-icon" href="/favicon.png?v=1" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <meta name="generator" content={Astro.generator} />
+        <title>Percento</title>
+        <link rel="canonical" href={canonicalUrl} />
+        <meta name="description" content={description} />
+        <meta name="robots" content="index,follow" />
+        <meta
+            name="theme-color"
+            media="(prefers-color-scheme: light)"
+            content="#fafaf9"
+        />
+        <meta
+            name="theme-color"
+            media="(prefers-color-scheme: dark)"
+            content="#0c0a09"
+        />
+        <meta name="color-scheme" content="light dark" />
+        <meta property="og:title" content="Percento" />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={socialImageUrl} />
+        <meta
+            property="og:image:alt"
+            content="Percento, quick percentage tools"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Percento" />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:url" content={canonicalUrl} />
+        <meta name="twitter:image" content={socialImageUrl} />
+        <meta
+            name="twitter:image:alt"
+            content="Percento, quick percentage tools"
+        />
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebApplication",
+                name: "Percento",
+                url: canonicalUrl,
+                description,
+                applicationCategory: "UtilitiesApplication",
+                operatingSystem: "Any",
+                offers: {
+                    "@type": "Offer",
+                    price: "0",
+                    priceCurrency: "USD",
+                },
+                author: { "@type": "Person", name: "Mateo Filip" },
+            })}
+        />
+    </head>
+    <body
+        class="flex min-h-dvh flex-col bg-stone-50 text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100"
+    >
+        <main
+            class="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 sm:px-6 md:px-8"
+        >
+            <header class="pt-14 md:pt-20">
+                <div class="flex items-center gap-3">
+                    <span
+                        class="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-600/10 text-lg font-semibold text-orange-700 dark:bg-orange-500/10 dark:text-orange-400"
+                        aria-hidden="true"
+                    >
+                        %
+                    </span>
+                    <span
+                        class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-400"
+                    >
+                        Quick percentage tools
+                    </span>
+                </div>
+                <h1
+                    class="mt-5 max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight md:text-6xl"
+                >
+                    Calculate any percentage
+                    <span
+                        class="text-orange-600 dark:text-orange-400"
+                    >
+                        in seconds
+                    </span>
+                    .
+                </h1>
+                <p
+                    class="mt-5 max-w-[60ch] text-base leading-relaxed text-stone-600 dark:text-stone-400 md:text-lg"
+                >
+                    Six precise calculators for percent of a number, change,
+                    difference, and more. No sign-up, works offline.
+                </p>
+            </header>
+
+            <section class="mt-10 flex-1 md:mt-14" aria-label="Calculators">
+                <PercentageCalculator client:load />
+            </section>
+
+            <section class="pt-16 md:pt-24" aria-labelledby="formulas-heading">
+                <h2
+                    id="formulas-heading"
+                    class="text-2xl font-semibold tracking-tight md:text-3xl"
+                >
+                    The math behind it
+                </h2>
+                <p
+                    class="mt-2 max-w-[60ch] text-sm leading-relaxed text-stone-600 dark:text-stone-400 md:text-base"
+                >
+                    Every result is computed on your device with plain
+                    formulas. Nothing is sent to a server.
+                </p>
+                <dl
+                    class="mt-8 grid grid-cols-1 gap-x-12 gap-y-6 md:grid-cols-2"
+                >
+                    <div>
+                        <dt class="text-sm font-semibold">
+                            Percentage of
+                        </dt>
+                        <dd
+                            class="mt-1 font-mono text-[13px] text-stone-500 dark:text-stone-400"
+                        >
+                            Result = (P ÷ 100) × Y
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-semibold">What percentage</dt>
+                        <dd
+                            class="mt-1 font-mono text-[13px] text-stone-500 dark:text-stone-400"
+                        >
+                            Percent = (Part ÷ Whole) × 100
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-semibold">Percentage change</dt>
+                        <dd
+                            class="mt-1 font-mono text-[13px] text-stone-500 dark:text-stone-400"
+                        >
+                            Change = ((New − Old) ÷ Old) × 100
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-semibold">Find total</dt>
+                        <dd
+                            class="mt-1 font-mono text-[13px] text-stone-500 dark:text-stone-400"
+                        >
+                            Total = Value ÷ (P ÷ 100)
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-semibold">
+                            Percentage difference
+                        </dt>
+                        <dd
+                            class="mt-1 font-mono text-[13px] text-stone-500 dark:text-stone-400"
+                        >
+                            Difference = (|A − B| ÷ min(|A|, |B|)) × 100
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-semibold">
+                            Increase or decrease
+                        </dt>
+                        <dd
+                            class="mt-1 font-mono text-[13px] text-stone-500 dark:text-stone-400"
+                        >
+                            Result = Value × (1 ± P ÷ 100)
+                        </dd>
+                    </div>
+                </dl>
+            </section>
+
+            <footer
+                class="mt-16 border-t border-stone-200 py-8 dark:border-stone-800 md:mt-24"
+            >
+                <div
+                    class="flex flex-col items-center justify-between gap-3 sm:flex-row"
+                >
+                    <p class="text-xs text-stone-500 dark:text-stone-400">
+                        © 2026 Percento
+                    </p>
+                    <div class="flex items-center gap-5">
+                        <a
+                            href="https://github.com/mateofilip/Percento"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-xs text-stone-500 transition-colors hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100"
+                        >
+                            View on GitHub
+                        </a>
+                        <span
+                            class="text-xs text-stone-500 dark:text-stone-400"
+                        >
+                            Made by Mateo Filip
+                        </span>
+                    </div>
+                </div>
+            </footer>
+        </main>
+        <StackInfo client:load />
+    </body>
 </html>

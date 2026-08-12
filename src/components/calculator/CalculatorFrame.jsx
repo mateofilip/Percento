@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { Check, Copy, TrashSimple } from "@phosphor-icons/react";
+
 import { Button } from "../ui/button";
 import {
   Card,
@@ -32,69 +34,6 @@ const copyTextToClipboard = async (text) => {
     return false;
   }
 };
-
-const TrashIcon = ({ className }) => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 15 15"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    aria-hidden="true"
-  >
-    <path
-      d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z"
-      fill="currentColor"
-      fillRule="evenodd"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const CopyIcon = ({ className }) => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 15 15"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    aria-hidden="true"
-  >
-    <path
-      d="M5 1.5C5 1.22386 5.22386 1 5.5 1H11.5C11.7761 1 12 1.22386 12 1.5V9.5C12 9.77614 11.7761 10 11.5 10H5.5C5.22386 10 5 9.77614 5 9.5V1.5ZM6 2V9H11V2H6Z"
-      fill="currentColor"
-      fillRule="evenodd"
-      clipRule="evenodd"
-    />
-    <path
-      d="M3 5.5C3 5.22386 3.22386 5 3.5 5H4V6H4V11H9V11.5C9 11.7761 8.77614 12 8.5 12H3.5C3.22386 12 3 11.7761 3 11.5V5.5Z"
-      fill="currentColor"
-      fillRule="evenodd"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const CheckIcon = ({ className }) => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 15 15"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    aria-hidden="true"
-  >
-    <path
-      d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
-      fill="currentColor"
-      fillRule="evenodd"
-      clipRule="evenodd"
-    />
-  </svg>
-);
 
 const IconSwapButton = ({
   disabled,
@@ -141,39 +80,42 @@ const IconSwapButton = ({
 
   return (
     <span
-      className={`relative inline-flex group/tooltip ${
+      className={`group/tooltip relative inline-flex ${
         disabled ? "cursor-not-allowed" : ""
       }`}
     >
       <Button
         type="button"
         variant="ghost"
-        size="sm"
+        size="icon"
         disabled={disabled}
         aria-label={ariaLabel}
-        className={`rounded-full py-5 text-white/80 bg-orange-800/20 transition-all hover:bg-orange-800/30 duration-200 ease-out disabled:opacity-50 ${
+        className={`h-9 w-9 rounded-full border border-stone-200/70 bg-white/70 text-stone-500 shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-px hover:border-stone-300 hover:bg-white hover:text-stone-900 active:scale-95 disabled:pointer-events-none disabled:opacity-40 dark:border-stone-700/70 dark:bg-stone-950/40 dark:text-stone-400 dark:hover:border-stone-600 dark:hover:bg-stone-950/70 dark:hover:text-stone-100 ${
           isAnimating ? "scale-105" : "scale-100"
         }`}
         onClick={handleClick}
       >
         <span className="relative h-4 w-4">
           <DefaultIcon
-            className={`absolute inset-0 h-4 w-4 transition-all duration-150 ${
+            size={16}
+            className={`absolute inset-0 transition-all duration-150 ${
               isDone ? "scale-75 opacity-0" : "scale-100 opacity-100"
             }`}
           />
-          <CheckIcon
+          <Check
             key={nonce}
-            className={`absolute inset-0 h-4 w-4 text-white transition-all duration-150 ${
+            size={16}
+            weight="bold"
+            className={`absolute inset-0 text-emerald-500 transition-all duration-150 dark:text-emerald-400 ${
               isDone ? "scale-100 opacity-100" : "scale-75 opacity-0"
             }`}
           />
         </span>
       </Button>
       <span className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 w-max max-w-56 whitespace-nowrap opacity-0 transition-all duration-200 translate-y-1 group-hover/tooltip:opacity-100 group-hover/tooltip:translate-y-0">
-        <span className="relative block rounded-xl  bg-neutral-900 border border-gray-900 p-2 text-xs text-white shadow-lg font-semibold">
+        <span className="relative block rounded-xl border border-stone-800 bg-stone-900 p-2 text-xs font-semibold text-white shadow-lg dark:border-stone-200 dark:bg-white dark:text-stone-900">
           {tooltipText}
-          <span className="absolute -bottom-1 right-3 h-2 w-2 rotate-45 border-b border-r border-gray-900 bg-neutral-900" />
+          <span className="absolute -bottom-1 right-3 h-2 w-2 rotate-45 border-b border-r border-stone-800 bg-stone-900 dark:border-stone-200 dark:bg-white" />
         </span>
       </span>
     </span>
@@ -183,10 +125,12 @@ const IconSwapButton = ({
 const CalculatorFrame = ({
   title,
   description,
+  badge,
   children,
   result,
   onClear,
   answerPlaceholder,
+  resultNode,
 }) => {
   const canCopy =
     Boolean(result) &&
@@ -195,21 +139,28 @@ const CalculatorFrame = ({
     typeof result?.value === "string";
 
   return (
-    <Card className="flex h-full flex-col rounded-xl group hover:rounded-3xl border border-white/40 bg-black/15 shadow-lg shadow-black/10 backdrop-blur-xl hover:shadow-xl transition-all duration-200 ease-out">
-      <CardHeader className="flex flex-row justify-between items-center border-b border-white/20 bg-orange-400/90 backdrop-blur-xl rounded-t-xl group-hover:rounded-t-3xl transition-all duration-200 ease-out">
-        <div>
-          <CardTitle className=" text-lg text-white">{title}</CardTitle>
-          <CardDescription className="text-xs text-white/65">
+    <Card className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-sm shadow-stone-900/5 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-stone-300/80 hover:shadow-xl hover:shadow-orange-900/5 dark:border-stone-800 dark:bg-stone-900 dark:shadow-black/20 dark:hover:border-stone-700 dark:hover:shadow-black/40">
+      <CardHeader className="flex flex-row items-start justify-between gap-3 px-6 pb-0 pt-6">
+        <div className="min-w-0">
+          {badge ? (
+            <span className="mb-1.5 inline-block rounded-full bg-orange-600/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-orange-700 dark:bg-orange-500/10 dark:text-orange-400">
+              {badge}
+            </span>
+          ) : null}
+          <CardTitle className="text-[15px] font-semibold tracking-tight text-stone-900 dark:text-stone-100">
+            {title}
+          </CardTitle>
+          <CardDescription className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">
             {description}
           </CardDescription>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
           <IconSwapButton
             disabled={!canCopy}
             ariaLabel="Copy result"
             title="Copy result"
             titleDisabled="Nothing to copy yet"
-            DefaultIcon={CopyIcon}
+            DefaultIcon={Copy}
             onAction={async () => {
               if (!canCopy) return false;
               return copyTextToClipboard(result.value);
@@ -220,7 +171,7 @@ const CalculatorFrame = ({
             ariaLabel="Clear inputs"
             title="Clear"
             titleDisabled="Clear"
-            DefaultIcon={TrashIcon}
+            DefaultIcon={TrashSimple}
             onAction={async () => {
               onClear();
               return true;
@@ -229,11 +180,13 @@ const CalculatorFrame = ({
         </div>
       </CardHeader>
 
-      <CardContent className="flex flex-col flex-1">
-        <div className="h-full items-center justify-center grid gap-5 py-6">
+      <CardContent className="flex flex-1 flex-col px-6 pb-5 pt-4">
+        <div className="flex flex-1 items-center justify-center py-2">
           {children}
         </div>
-        <AnswerDisplay result={result} placeholderValue={answerPlaceholder} />
+        {resultNode ?? (
+          <AnswerDisplay result={result} placeholderValue={answerPlaceholder} />
+        )}
       </CardContent>
     </Card>
   );

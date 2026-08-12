@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { Info, X } from "@phosphor-icons/react";
+
 export default function StackInfo() {
   const [shouldRender, setShouldRender] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -76,32 +78,18 @@ export default function StackInfo() {
         onClick={() => (isOpen ? close() : open())}
         aria-expanded={isOpen}
         aria-controls={modalId}
-        className={`animate-in fade-in slide-in-from-bottom-4 fixed right-4 bottom-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-neutral-700 bg-neutral-800 text-white shadow-lg transition-transform hover:scale-110 hover:bg-neutral-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 ${
+        className={`fixed bottom-5 right-5 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-stone-200/80 bg-white/80 text-stone-500 shadow-lg shadow-stone-900/10 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-stone-900 hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-700/80 dark:bg-stone-900/80 dark:text-stone-400 dark:shadow-black/30 dark:hover:bg-stone-900 dark:hover:text-stone-100 dark:focus-visible:ring-offset-stone-950 ${
           isOpen ? "z-[80]" : "z-[60]"
         }`}
         aria-label="View Tech Stack"
         title="View Tech Stack"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 16v-4" />
-          <path d="M12 8h.01" />
-        </svg>
+        <Info size={20} />
       </button>
 
       {shouldRender && (
         <div
-          className={`fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm transition-opacity duration-200 motion-reduce:transition-none ${
+          className={`fixed inset-0 z-[70] flex items-center justify-center bg-stone-950/40 p-4 backdrop-blur-sm transition-opacity duration-200 motion-reduce:transition-none dark:bg-black/60 ${
             isOpen ? "opacity-100" : "opacity-0"
           }`}
           onClick={close}
@@ -111,7 +99,7 @@ export default function StackInfo() {
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className={`w-full max-w-sm rounded-2xl border border-neutral-700 bg-neutral-900/95 p-6 shadow-2xl transform-gpu transition-all duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none ${
+            className={`w-full max-w-sm rounded-3xl border border-stone-200 bg-white p-6 shadow-2xl shadow-stone-900/15 transform-gpu transition-all duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none dark:border-stone-800 dark:bg-stone-900 dark:shadow-black/50 ${
               isOpen
                 ? "opacity-100 translate-y-0 scale-100"
                 : "opacity-0 translate-y-2 scale-95"
@@ -119,49 +107,41 @@ export default function StackInfo() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-6 flex items-center justify-between">
-              <h2 id={titleId} className="text-xl font-bold text-white">
+              <h2
+                id={titleId}
+                className="text-xl font-semibold tracking-tight text-stone-900 dark:text-stone-100"
+              >
                 Tech Stack
               </h2>
               <button
                 ref={closeButtonRef}
                 type="button"
                 onClick={close}
-                className="cursor-pointer rounded-full p-1 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2 dark:hover:bg-stone-800 dark:hover:text-stone-100"
                 aria-label="Close"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
+                <X size={18} />
               </button>
             </div>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {stack.map((item) => (
                 <li
                   key={item.name}
-                  className="flex items-center justify-between rounded-xl border border-neutral-700/50 bg-neutral-800/50 p-3 transition-colors hover:bg-neutral-800"
+                  className="flex items-center justify-between rounded-2xl border border-stone-200/70 bg-stone-50 px-4 py-3 transition-colors hover:bg-stone-100 dark:border-stone-800 dark:bg-stone-950/40 dark:hover:bg-stone-800/60"
                 >
-                  <span className="font-semibold text-slate-100">
+                  <span className="text-sm font-semibold text-stone-900 dark:text-stone-100">
                     {item.name}
                   </span>
-                  <span className="rounded-full bg-orange-400/10 px-2 py-1 text-xs font-medium text-orange-400">
+                  <span className="rounded-full bg-orange-600/10 px-2.5 py-1 text-[11px] font-semibold text-orange-700 dark:bg-orange-500/10 dark:text-orange-400">
                     {item.description}
                   </span>
                 </li>
               ))}
             </ul>
             <div className="mt-6 text-center">
-              <p className="text-xs text-neutral-500">Built with ❤️ by Mateo</p>
+              <p className="text-xs text-stone-500 dark:text-stone-400">
+                Made by Mateo Filip
+              </p>
             </div>
           </div>
         </div>

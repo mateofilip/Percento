@@ -16,96 +16,52 @@ html {
   font-family: OpenRunde, system-ui, sans-serif;
 }
 
-.bg-animation {
-  background-color: #121c3a;
-  background-repeat: no-repeat;
-  background-size: 200% 200%;
-  animation: bg-animation 15s ease-in-out infinite;
-  background-image:
-    radial-gradient(
-      1000px circle at 15% 10%,
-      rgba(249, 115, 22, 0.5),
-      transparent 55%
-    ),
-    radial-gradient(
-      900px circle at 85% 15%,
-      rgba(14, 165, 233, 0.48),
-      transparent 55%
-    ),
-    radial-gradient(
-      800px circle at 50% 90%,
-      rgba(99, 102, 241, 0.42),
-      transparent 60%
-    ),
-    linear-gradient(135deg, #1b2a55, #121c3a);
+body {
+  position: relative;
 }
 
-.bg-animation::before {
+/* Film-grain texture, fixed, never blocks interaction. */
+body::before {
   content: "";
   position: fixed;
   inset: 0;
+  z-index: 100;
   pointer-events: none;
-  background-image: radial-gradient(
-    circle at 1px 1px,
-    rgba(255, 255, 255, 0.12) 1px,
-    transparent 0
-  );
-  background-size: 26px 26px;
-  opacity: 0.2;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  opacity: 0.028;
 }
 
-.bg-animation::after {
+/* Soft brand-tinted glow anchored to the top of the viewport. */
+body::after {
   content: "";
   position: fixed;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
-  background-image: radial-gradient(
-    circle at 50% 40%,
-    transparent 0%,
-    rgba(0, 0, 0, 0.35) 82%
+  background: radial-gradient(
+    55rem 42rem at 50% -8rem,
+    rgb(249 115 22 / 0.07),
+    transparent 65%
   );
 }
 
-@keyframes bg-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+@media (prefers-color-scheme: dark) {
+  body::after {
+    background: radial-gradient(
+      55rem 42rem at 50% -8rem,
+      rgb(251 146 60 / 0.09),
+      transparent 65%
+    );
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .bg-animation {
-    animation: none;
-    background-size: cover;
-  }
-}
-
-.fade-in-animation {
-  animation: fade-in 1s ease-out;
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* Calculator grid entrance: staggered lift + blur. */
 .calculator-grid-enter > * {
   opacity: 0;
   transform: translateY(18px) scale(0.98);
   filter: blur(10px);
-  animation: calculator-card-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: calculator-card-enter 700ms cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
   will-change: transform, opacity, filter;
 }
 
@@ -152,15 +108,21 @@ html {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .fade-in-animation {
-    animation: none;
-  }
+/* Result ring: springy ease on dash offset when the value changes. */
+.ring-progress {
+  transition: stroke-dashoffset 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: stroke-dashoffset;
+}
 
+@media (prefers-reduced-motion: reduce) {
   .calculator-grid-enter > * {
     animation: none;
     opacity: 1;
     transform: none;
     filter: none;
+  }
+
+  .ring-progress {
+    transition: none;
   }
 }

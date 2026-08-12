@@ -9,7 +9,12 @@ import {
   SelectValue,
 } from "../ui/select";
 import { CalculatorFrame } from "./CalculatorFrame";
+import { ResultRing } from "./ResultRing";
 import { createEmptyResult, formatNumber, formatPercent } from "./utils";
+
+const sentenceTextClass =
+  "text-stone-600 dark:text-stone-400";
+const sentenceInputClass = "w-24 text-center text-lg";
 
 const PercentOfCard = () => {
   const [percent, setPercent] = useState("");
@@ -58,15 +63,24 @@ const PercentOfCard = () => {
 
   return (
     <CalculatorFrame
-      title="Percentage of..."
+      title="Percentage of"
       description="What is X% of Y?"
+      badge="Most used"
       result={result}
       onClear={clear}
       answerPlaceholder="0"
-      className="fade-in-animation"
+      resultNode={
+        <ResultRing
+          percent={parseFloat(percent)}
+          base={parseFloat(base)}
+          result={result}
+        />
+      }
     >
-      <div className="flex w-full flex-wrap items-center justify-start gap-2">
-        <span className="text-white/80">What is</span>
+      <div
+        className={`flex flex-wrap items-center justify-center gap-2 ${sentenceTextClass}`}
+      >
+        <span>What is</span>
         <Input
           aria-label="Percent"
           aria-invalid={percentInvalid}
@@ -75,10 +89,10 @@ const PercentOfCard = () => {
           step="any"
           value={percent}
           onChange={(e) => setPercent(e.target.value)}
-          className="w-20 text-center text-lg"
+          className={sentenceInputClass}
           placeholder="0"
         />
-        <span className="text-white/80">% of</span>
+        <span>% of</span>
         <Input
           aria-label="Base value"
           aria-invalid={baseInvalid}
@@ -87,10 +101,10 @@ const PercentOfCard = () => {
           step="any"
           value={base}
           onChange={(e) => setBase(e.target.value)}
-          className="w-20 text-center text-lg"
+          className={sentenceInputClass}
           placeholder="0"
         />
-        <span className="text-white/80">?</span>
+        <span>?</span>
       </div>
     </CalculatorFrame>
   );
@@ -154,7 +168,9 @@ const WhatPercentCard = () => {
       onClear={clear}
       answerPlaceholder="0%"
     >
-      <div className="flex w-full flex-wrap items-center justify-start gap-2">
+      <div
+        className={`flex flex-wrap items-center justify-center gap-2 ${sentenceTextClass}`}
+      >
         <Input
           aria-label="Part value"
           aria-invalid={partInvalid}
@@ -163,10 +179,10 @@ const WhatPercentCard = () => {
           step="any"
           value={part}
           onChange={(e) => setPart(e.target.value)}
-          className="w-20 text-center text-lg"
+          className={sentenceInputClass}
           placeholder="0"
         />
-        <span className="text-white/80">is what % of</span>
+        <span>is what % of</span>
         <Input
           aria-label="Whole value"
           aria-invalid={wholeInvalid}
@@ -175,10 +191,10 @@ const WhatPercentCard = () => {
           step="any"
           value={whole}
           onChange={(e) => setWhole(e.target.value)}
-          className="w-20 text-center text-lg"
+          className={sentenceInputClass}
           placeholder="0"
         />
-        <span className="text-white/80">?</span>
+        <span>?</span>
       </div>
     </CalculatorFrame>
   );
@@ -217,11 +233,12 @@ const PercentageChangeCard = () => {
     }
 
     const pct = ((b - a) / a) * 100;
-    const direction = pct > 0 ? "increase" : "decrease";
+    const direction = pct > 0 ? "up" : "down";
     const formatted = formatPercent(Math.abs(pct));
     setResult({
       value: formatted,
-      explanation: `${formatted} ${direction} from ${a} to ${b}`,
+      direction,
+      explanation: `${formatted} ${pct > 0 ? "increase" : "decrease"} from ${a} to ${b}`,
     });
   };
 
@@ -243,9 +260,9 @@ const PercentageChangeCard = () => {
       onClear={clear}
       answerPlaceholder="0%"
     >
-      <div className="flex w-full max-w-sm flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <span className="w-14 text-sm text-white/80">From... </span>
+      <div className="mx-auto flex w-full max-w-xs flex-col gap-2.5">
+        <div className={`flex items-center gap-2 ${sentenceTextClass}`}>
+          <span className="w-14 text-sm">From</span>
           <Input
             aria-label="From value"
             aria-invalid={fromInvalid}
@@ -254,12 +271,12 @@ const PercentageChangeCard = () => {
             step="any"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
-            className="text-center text-lg"
+            className="flex-1 text-center text-lg"
             placeholder="Start"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <span className="w-14 text-sm text-white/80 text-right">to... </span>
+        <div className={`flex items-center gap-2 ${sentenceTextClass}`}>
+          <span className="w-14 text-sm">to</span>
           <Input
             aria-label="To value"
             aria-invalid={toInvalid}
@@ -268,7 +285,7 @@ const PercentageChangeCard = () => {
             step="any"
             value={to}
             onChange={(e) => setTo(e.target.value)}
-            className="text-center text-lg"
+            className="flex-1 text-center text-lg"
             placeholder="End"
           />
         </div>
@@ -335,7 +352,9 @@ const FindTotalCard = () => {
       onClear={clear}
       answerPlaceholder="0"
     >
-      <div className="flex w-full flex-wrap items-center justify-start gap-2">
+      <div
+        className={`flex flex-wrap items-center justify-center gap-2 ${sentenceTextClass}`}
+      >
         <Input
           aria-label="Known value"
           aria-invalid={valueInvalid}
@@ -344,10 +363,10 @@ const FindTotalCard = () => {
           step="any"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="w-20 text-center text-lg"
+          className={sentenceInputClass}
           placeholder="0"
         />
-        <span className="text-white/80">is</span>
+        <span>is</span>
         <Input
           aria-label="Percent"
           aria-invalid={percentInvalid}
@@ -356,10 +375,10 @@ const FindTotalCard = () => {
           step="any"
           value={percent}
           onChange={(e) => setPercent(e.target.value)}
-          className="w-20 text-center text-lg"
+          className={sentenceInputClass}
           placeholder="0"
         />
-        <span className="text-white">% of what?</span>
+        <span>% of what?</span>
       </div>
     </CalculatorFrame>
   );
@@ -433,7 +452,7 @@ const PercentageDifferenceCard = () => {
       onClear={clear}
       answerPlaceholder="0%"
     >
-      <div className="flex w-full max-w-sm flex-col gap-3">
+      <div className="mx-auto flex w-full max-w-xs flex-col gap-2.5">
         <Input
           aria-label="Value A"
           aria-invalid={aInvalid}
@@ -522,7 +541,7 @@ const ValueChangeCard = () => {
       onClear={clear}
       answerPlaceholder="0"
     >
-      <div className="flex w-full max-w-sm flex-col gap-3">
+      <div className="mx-auto flex w-full max-w-xs flex-col gap-2.5">
         <Input
           aria-label="Start value"
           aria-invalid={startInvalid}
@@ -543,7 +562,7 @@ const ValueChangeCard = () => {
             <SelectItem value="decrease">Decrease by</SelectItem>
           </SelectContent>
         </Select>
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${sentenceTextClass}`}>
           <Input
             aria-label="Percent change"
             aria-invalid={percentInvalid}
@@ -552,10 +571,10 @@ const ValueChangeCard = () => {
             step="any"
             value={percent}
             onChange={(e) => setPercent(e.target.value)}
-            className="text-center text-lg"
+            className="flex-1 text-center text-lg"
             placeholder="0"
           />
-          <span className="text-sm text-white">%</span>
+          <span className="text-sm">%</span>
         </div>
       </div>
     </CalculatorFrame>

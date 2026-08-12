@@ -14,7 +14,7 @@ const SelectTrigger = React.forwardRef(
     <SelectPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm shadow-black/5 ring-offset-white transition-colors placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-11 w-full items-center justify-between rounded-xl border border-stone-300 bg-white px-3 py-2 text-base font-medium text-stone-900 shadow-sm shadow-black/[0.03] tabular-nums transition-all duration-200 ring-offset-stone-50 hover:border-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:ring-offset-2 data-[placeholder]:text-stone-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-stone-700 dark:bg-stone-950/50 dark:text-stone-100 dark:shadow-none dark:ring-offset-stone-950 dark:hover:border-stone-600 dark:focus:ring-orange-400/30 dark:data-[placeholder]:text-stone-400",
         className
       )}
       {...props}
@@ -25,7 +25,7 @@ const SelectTrigger = React.forwardRef(
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="h-4 w-4 text-gray-500"
+          className="h-4 w-4 text-stone-500 dark:text-stone-400"
           aria-hidden="true"
         >
           <path
@@ -47,7 +47,7 @@ const SelectContent = React.forwardRef(
       <SelectPrimitive.Content
         ref={ref}
         className={cn(
-          "relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg shadow-black/10 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          "relative z-50 min-w-[8rem] overflow-hidden rounded-2xl border border-stone-200 bg-white p-1 shadow-xl shadow-stone-900/10 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border-stone-700 dark:bg-stone-900 dark:shadow-black/40",
           position === "popper" &&
             "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
           className
@@ -57,7 +57,7 @@ const SelectContent = React.forwardRef(
       >
         <SelectPrimitive.Viewport
           className={cn(
-            "p-1",
+            "p-0.5",
             position === "popper" &&
               "w-full min-w-[var(--radix-select-trigger-width)]"
           )}
@@ -74,7 +74,7 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 const SelectLabel = React.forwardRef(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn("px-2 py-1.5 text-xs font-semibold text-gray-900", className)}
+    className={cn("px-2 py-1.5 text-xs font-semibold text-stone-900 dark:text-stone-100", className)}
     {...props}
   />
 ));
@@ -86,13 +86,13 @@ const SelectItem = React.forwardRef(
     <SelectPrimitive.Item
       ref={ref}
       className={cn(
-        "relative flex w-full select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm text-gray-900 outline-none focus:bg-orange-400/10 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 cursor-pointer",
+        "relative flex w-full cursor-pointer select-none items-center rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-stone-900 outline-none transition-colors focus:bg-orange-600/10 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:text-stone-100 dark:focus:bg-orange-500/10",
         className
       )}
       {...props}
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-      <SelectPrimitive.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-orange-400">
+      <SelectPrimitive.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-orange-600 dark:text-orange-400">
         <svg
           width="15"
           height="15"
@@ -103,8 +103,8 @@ const SelectItem = React.forwardRef(
           <path
             d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
             fill="currentColor"
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
           ></path>
         </svg>
       </SelectPrimitive.ItemIndicator>
@@ -117,7 +117,7 @@ SelectItem.displayName = SelectPrimitive.Item.displayName;
 const SelectSeparator = React.forwardRef(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-gray-100", className)}
+    className={cn("-mx-1 my-1 h-px bg-stone-200/70 dark:bg-stone-800", className)}
     {...props}
   />
 ));
