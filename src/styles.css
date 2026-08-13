@@ -55,14 +55,12 @@ body::after {
   );
 }
 
-@media (prefers-color-scheme: dark) {
-  body::after {
-    background: radial-gradient(
-      55rem 42rem at 50% -8rem,
-      rgb(251 146 60 / 0.09),
-      transparent 65%
-    );
-  }
+.dark body::after {
+  background: radial-gradient(
+    55rem 42rem at 50% -8rem,
+    rgb(251 146 60 / 0.09),
+    transparent 65%
+  );
 }
 
 /* Calculator grid entrance: staggered lift + blur. */

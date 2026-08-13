@@ -33,7 +33,7 @@ const iconButtonVariants = {
   light:
     "border-stone-200/70 bg-white/70 text-stone-500 hover:border-stone-300 hover:bg-white hover:text-stone-900 dark:border-stone-700/70 dark:bg-stone-950/40 dark:text-stone-400 dark:hover:border-stone-600 dark:hover:bg-stone-950/70 dark:hover:text-stone-100",
   orange:
-    "border-white/25 bg-white/15 text-white hover:border-white/40 hover:bg-white/25 hover:text-white",
+    "border-white/25 bg-white/15 text-white hover:border-white/40 hover:bg-white/25 hover:text-white dark:border-white/25 dark:bg-white/15 dark:text-white dark:hover:border-white/40 dark:hover:bg-white/25 dark:hover:text-white",
 };
 
 const IconSwapButton = ({
@@ -150,7 +150,7 @@ const CalculatorFrame = ({
           <IconSwapButton
             disabled={!canCopy}
             ariaLabel="Copy result"
-            title="Copy result"
+            title="Copy"
             titleDisabled="Nothing to copy yet"
             DefaultIcon={Copy}
             onAction={async () => {

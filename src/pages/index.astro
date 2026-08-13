@@ -1,6 +1,7 @@
 ---
 import PercentageCalculator from "../components/PercentageCalculator.jsx";
 import StackInfo from "../components/StackInfo.jsx";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 import "../styles.css";
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
@@ -48,16 +49,7 @@ const description =
         <link rel="canonical" href={canonicalUrl} />
         <meta name="description" content={description} />
         <meta name="robots" content="index,follow" />
-        <meta
-            name="theme-color"
-            media="(prefers-color-scheme: light)"
-            content="#fafaf9"
-        />
-        <meta
-            name="theme-color"
-            media="(prefers-color-scheme: dark)"
-            content="#0c0a09"
-        />
+        <meta name="theme-color" content="#fafaf9" />
         <meta name="color-scheme" content="light dark" />
         <meta property="og:title" content="Percento" />
         <meta property="og:description" content={description} />
@@ -95,6 +87,54 @@ const description =
                 author: { "@type": "Person", name: "Mateo Filip" },
             })}
         />
+        <script is:inline>
+            (function () {
+                var THEME_KEY = "percento-theme";
+                var stored = null;
+                try {
+                    stored = localStorage.getItem(THEME_KEY);
+                } catch (e) {}
+                var theme =
+                    stored === "light" || stored === "dark" ? stored : "system";
+                var mql = window.matchMedia(
+                    "(prefers-color-scheme: dark)"
+                );
+                var apply = function () {
+                    var dark =
+                        theme === "dark" ||
+                        (theme === "system" && mql.matches);
+                    document.documentElement.classList.toggle("dark", dark);
+                    document.documentElement.style.colorScheme = dark
+                        ? "dark"
+                        : "light";
+                    var meta = document.querySelector(
+                        'meta[name="theme-color"]'
+                    );
+                    if (meta) {
+                        meta.setAttribute(
+                            "content",
+                            dark ? "#0c0a09" : "#fafaf9"
+                        );
+                    }
+                };
+                apply();
+                if (theme === "system") {
+                    mql.addEventListener("change", apply);
+                }
+                window.__percentoSetTheme = function (next) {
+                    theme = next;
+                    try {
+                        localStorage.setItem(THEME_KEY, theme);
+                    } catch (e) {}
+                    mql.removeEventListener("change", apply);
+                    if (theme === "system") {
+                        mql.addEventListener("change", apply);
+                    }
+                    apply();
+                };
+                window.__percentoTheme = theme;
+            })();
+        </script>
     </head>
     <body
         class="flex min-h-dvh flex-col bg-stone-50 text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100"
@@ -205,5 +245,6 @@ const description =
             </section>
         </main>
         <StackInfo client:load />
+        <ThemeToggle client:load />
     </body>
 </html>

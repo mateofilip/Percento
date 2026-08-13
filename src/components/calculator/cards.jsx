@@ -89,7 +89,7 @@ const FeaturedCalculator = () => {
           variant="orange"
           disabled={!canCopy}
           ariaLabel="Copy result"
-          title="Copy result"
+          title="Copy"
           titleDisabled="Nothing to copy yet"
           DefaultIcon={Copy}
           onAction={async () => {
