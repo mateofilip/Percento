@@ -2,14 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { Check, Copy, TrashSimple } from "@phosphor-icons/react";
 
+import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
 import { AnswerDisplay } from "./AnswerDisplay";
 
 const copyTextToClipboard = async (text) => {
@@ -35,6 +29,13 @@ const copyTextToClipboard = async (text) => {
   }
 };
 
+const iconButtonVariants = {
+  light:
+    "border-stone-200/70 bg-white/70 text-stone-500 hover:border-stone-300 hover:bg-white hover:text-stone-900 dark:border-stone-700/70 dark:bg-stone-950/40 dark:text-stone-400 dark:hover:border-stone-600 dark:hover:bg-stone-950/70 dark:hover:text-stone-100",
+  orange:
+    "border-white/25 bg-white/15 text-white hover:border-white/40 hover:bg-white/25 hover:text-white",
+};
+
 const IconSwapButton = ({
   disabled,
   ariaLabel,
@@ -42,6 +43,8 @@ const IconSwapButton = ({
   titleDisabled,
   onAction,
   DefaultIcon,
+  variant = "light",
+  className = "",
 }) => {
   const tooltipText = disabled ? titleDisabled : title;
   const [isAnimating, setIsAnimating] = useState(false);
@@ -90,9 +93,11 @@ const IconSwapButton = ({
         size="icon"
         disabled={disabled}
         aria-label={ariaLabel}
-        className={`h-9 w-9 rounded-full border border-stone-200/70 bg-white/70 text-stone-500 shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-px hover:border-stone-300 hover:bg-white hover:text-stone-900 active:scale-95 disabled:pointer-events-none disabled:opacity-40 dark:border-stone-700/70 dark:bg-stone-950/40 dark:text-stone-400 dark:hover:border-stone-600 dark:hover:bg-stone-950/70 dark:hover:text-stone-100 ${
-          isAnimating ? "scale-105" : "scale-100"
-        }`}
+        className={cn(
+          "h-9 w-9 rounded-full border shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-px active:scale-95 disabled:pointer-events-none disabled:opacity-40",
+          iconButtonVariants[variant],
+          className
+        )}
         onClick={handleClick}
       >
         <span className="relative h-4 w-4">
@@ -106,16 +111,16 @@ const IconSwapButton = ({
             key={nonce}
             size={16}
             weight="bold"
-            className={`absolute inset-0 text-emerald-500 transition-all duration-150 dark:text-emerald-400 ${
+            className={`absolute inset-0 text-current transition-all duration-150 ${
               isDone ? "scale-100 opacity-100" : "scale-75 opacity-0"
             }`}
           />
         </span>
       </Button>
-      <span className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 w-max max-w-56 whitespace-nowrap opacity-0 transition-all duration-200 translate-y-1 group-hover/tooltip:opacity-100 group-hover/tooltip:translate-y-0">
+      <span className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 w-max max-w-56 translate-y-1 whitespace-nowrap opacity-0 transition-all duration-200 ease-out group-hover/tooltip:translate-y-0 group-hover/tooltip:opacity-100 group-hover/tooltip:delay-200">
         <span className="relative block rounded-xl border border-stone-800 bg-stone-900 p-2 text-xs font-semibold text-white shadow-lg dark:border-stone-200 dark:bg-white dark:text-stone-900">
           {tooltipText}
-          <span className="absolute -bottom-1 right-3 h-2 w-2 rotate-45 border-b border-r border-stone-800 bg-stone-900 dark:border-stone-200 dark:bg-white" />
+          <span className="absolute -bottom-1 right-3 h-2 w-2 rotate-45 rounded-[3px] border-b border-r border-stone-800 bg-stone-900 dark:border-stone-200 dark:bg-white" />
         </span>
       </span>
     </span>
@@ -124,13 +129,10 @@ const IconSwapButton = ({
 
 const CalculatorFrame = ({
   title,
-  description,
-  badge,
   children,
   result,
   onClear,
   answerPlaceholder,
-  resultNode,
 }) => {
   const canCopy =
     Boolean(result) &&
@@ -139,22 +141,12 @@ const CalculatorFrame = ({
     typeof result?.value === "string";
 
   return (
-    <Card className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-sm shadow-stone-900/5 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-stone-300/80 hover:shadow-xl hover:shadow-orange-900/5 dark:border-stone-800 dark:bg-stone-900 dark:shadow-black/20 dark:hover:border-stone-700 dark:hover:shadow-black/40">
-      <CardHeader className="flex flex-row items-start justify-between gap-3 px-6 pb-0 pt-6">
-        <div className="min-w-0">
-          {badge ? (
-            <span className="mb-1.5 inline-block rounded-full bg-orange-600/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-orange-700 dark:bg-orange-500/10 dark:text-orange-400">
-              {badge}
-            </span>
-          ) : null}
-          <CardTitle className="text-[15px] font-semibold tracking-tight text-stone-900 dark:text-stone-100">
-            {title}
-          </CardTitle>
-          <CardDescription className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">
-            {description}
-          </CardDescription>
-        </div>
-        <div className="flex shrink-0 items-center gap-1.5">
+    <div className="flex h-full flex-col rounded-3xl border border-stone-200/80 bg-white p-5 shadow-sm shadow-stone-900/5 transition-all duration-300 ease-out hover:border-stone-300/80 hover:shadow-xl hover:shadow-stone-900/10 dark:border-stone-800 dark:bg-stone-900 dark:shadow-black/20 dark:hover:border-stone-700 dark:hover:shadow-black/40">
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="text-sm font-semibold tracking-tight text-stone-900 dark:text-stone-100">
+          {title}
+        </h3>
+        <div className="flex shrink-0 items-center gap-1">
           <IconSwapButton
             disabled={!canCopy}
             ariaLabel="Copy result"
@@ -178,18 +170,13 @@ const CalculatorFrame = ({
             }}
           />
         </div>
-      </CardHeader>
+      </div>
 
-      <CardContent className="flex flex-1 flex-col px-6 pb-5 pt-4">
-        <div className="flex flex-1 items-center justify-center py-2">
-          {children}
-        </div>
-        {resultNode ?? (
-          <AnswerDisplay result={result} placeholderValue={answerPlaceholder} />
-        )}
-      </CardContent>
-    </Card>
+      <div className="flex flex-1 items-center py-5">{children}</div>
+
+      <AnswerDisplay result={result} placeholderValue={answerPlaceholder} />
+    </div>
   );
 };
 
-export { CalculatorFrame };
+export { CalculatorFrame, IconSwapButton, copyTextToClipboard };

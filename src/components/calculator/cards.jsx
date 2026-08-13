@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
+import { Copy, TrashSimple } from "@phosphor-icons/react";
 
 import { Input } from "../ui/input";
 import {
@@ -8,15 +10,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { CalculatorFrame } from "./CalculatorFrame";
-import { ResultRing } from "./ResultRing";
+import { useBump, useFitText } from "./AnswerDisplay";
+import {
+  CalculatorFrame,
+  IconSwapButton,
+  copyTextToClipboard,
+} from "./CalculatorFrame";
 import { createEmptyResult, formatNumber, formatPercent } from "./utils";
 
-const sentenceTextClass =
-  "text-stone-600 dark:text-stone-400";
-const sentenceInputClass = "w-24 text-center text-lg";
+const compactSentenceClass =
+  "flex w-full flex-wrap items-center justify-center gap-2 text-base text-stone-600 dark:text-stone-400";
+const compactInputClass = "w-24 text-center text-lg";
 
-const PercentOfCard = () => {
+const quickExamples = [
+  { percent: "15", base: "84" },
+  { percent: "20", base: "150" },
+  { percent: "7.5", base: "120" },
+];
+
+const FeaturedCalculator = () => {
   const [percent, setPercent] = useState("");
   const [base, setBase] = useState("");
   const [result, setResult] = useState(createEmptyResult);
@@ -29,6 +41,19 @@ const PercentOfCard = () => {
     Boolean(result?.error) &&
     base.trim() !== "" &&
     !Number.isFinite(parseFloat(base));
+
+  const isPlaceholder = Boolean(result?.placeholder);
+  const hasError = Boolean(result?.error);
+  const value =
+    !isPlaceholder && !hasError && typeof result?.value === "string"
+      ? result.value
+      : "0";
+
+  const numberRef = useRef(null);
+  const fontSize = useFitText(numberRef, value, 24, 96);
+  const isBumping = useBump(value, !isPlaceholder && !hasError);
+
+  const canCopy = !isPlaceholder && !hasError;
 
   const calculate = () => {
     if (percent.trim() === "" || base.trim() === "") {
@@ -43,12 +68,8 @@ const PercentOfCard = () => {
       return;
     }
 
-    const value = (p / 100) * b;
-    const formatted = formatNumber(value);
-    setResult({
-      value: formatted,
-      explanation: `${p}% of ${b} is ${formatted}`,
-    });
+    const formatted = formatNumber((p / 100) * b);
+    setResult({ value: formatted });
   };
 
   const clear = () => {
@@ -62,51 +83,121 @@ const PercentOfCard = () => {
   }, [percent, base]);
 
   return (
-    <CalculatorFrame
-      title="Percentage of"
-      description="What is X% of Y?"
-      badge="Most used"
-      result={result}
-      onClear={clear}
-      answerPlaceholder="0"
-      resultNode={
-        <ResultRing
-          percent={parseFloat(percent)}
-          base={parseFloat(base)}
-          result={result}
+    <div className="relative h-full rounded-3xl bg-[radial-gradient(70%_60%_at_90%_0%,rgba(255,255,255,0.18),transparent_60%),radial-gradient(60%_60%_at_0%_110%,rgba(120,53,15,0.35),transparent_65%),linear-gradient(135deg,#f97316,#ea580c,#c2410c)] px-6 pb-8 pt-14 shadow-[0_24px_60px_-24px_rgba(234,88,12,0.45)] md:px-8 md:pb-10 md:pt-16">
+      <div className="absolute right-5 top-5 z-10 flex items-center gap-1.5 md:right-6 md:top-6">
+        <IconSwapButton
+          variant="orange"
+          disabled={!canCopy}
+          ariaLabel="Copy result"
+          title="Copy result"
+          titleDisabled="Nothing to copy yet"
+          DefaultIcon={Copy}
+          onAction={async () => {
+            if (!canCopy) return false;
+            return copyTextToClipboard(result.value);
+          }}
         />
-      }
-    >
-      <div
-        className={`flex flex-wrap items-center justify-center gap-2 ${sentenceTextClass}`}
-      >
-        <span>What is</span>
-        <Input
-          aria-label="Percent"
-          aria-invalid={percentInvalid}
-          inputMode="decimal"
-          type="number"
-          step="any"
-          value={percent}
-          onChange={(e) => setPercent(e.target.value)}
-          className={sentenceInputClass}
-          placeholder="0"
+        <IconSwapButton
+          variant="orange"
+          disabled={false}
+          ariaLabel="Clear inputs"
+          title="Clear"
+          titleDisabled="Clear"
+          DefaultIcon={TrashSimple}
+          onAction={async () => {
+            clear();
+            return true;
+          }}
         />
-        <span>% of</span>
-        <Input
-          aria-label="Base value"
-          aria-invalid={baseInvalid}
-          inputMode="decimal"
-          type="number"
-          step="any"
-          value={base}
-          onChange={(e) => setBase(e.target.value)}
-          className={sentenceInputClass}
-          placeholder="0"
-        />
-        <span>?</span>
       </div>
-    </CalculatorFrame>
+
+      <div className="relative flex min-h-full flex-col justify-between gap-9">
+        <div className="min-w-0">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-100/80">
+            Percentage of
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-center justify-start gap-2 text-lg text-orange-50">
+            <span>What is</span>
+            <Input
+              variant="dark"
+              aria-label="Percent"
+              aria-invalid={percentInvalid}
+              inputMode="decimal"
+              type="number"
+              step="any"
+              value={percent}
+              onChange={(e) => setPercent(e.target.value)}
+              className="w-28 text-center"
+              placeholder="0"
+            />
+            <span>% of</span>
+            <Input
+              variant="dark"
+              aria-label="Base value"
+              aria-invalid={baseInvalid}
+              inputMode="decimal"
+              type="number"
+              step="any"
+              value={base}
+              onChange={(e) => setBase(e.target.value)}
+              className="w-28 text-center"
+              placeholder="0"
+            />
+            <span>?</span>
+          </div>
+
+          <div className="mt-7 flex flex-wrap items-center justify-start gap-2">
+            <span className="text-xs font-semibold text-orange-100/70">
+              Try:
+            </span>
+            {quickExamples.map((example) => (
+              <button
+                key={`${example.percent}-${example.base}`}
+                type="button"
+                onClick={() => {
+                  setPercent(example.percent);
+                  setBase(example.base);
+                }}
+                className="cursor-pointer rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-orange-50 transition-all duration-200 hover:border-white/50 hover:bg-white/25 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+              >
+                {example.percent}% of {example.base}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-right">
+          {hasError ? (
+            <p
+              role="alert"
+              className="inline-block rounded-lg bg-white/15 px-3 py-1.5 text-sm font-semibold text-white"
+            >
+              {result.error}
+            </p>
+          ) : (
+            <>
+              <p
+                ref={numberRef}
+                aria-live="polite"
+                aria-atomic="true"
+                className={`overflow-hidden whitespace-nowrap text-clip font-semibold tabular-nums leading-none text-white transition-transform duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none ${
+                  isPlaceholder ? "text-white/30" : isBumping ? "scale-105" : "scale-100"
+                }`}
+                style={{ fontSize: `${fontSize}px` }}
+              >
+                {value}
+              </p>
+              <p className="mt-3 text-sm font-medium text-orange-100/80">
+                {isPlaceholder
+                  ? "Start typing"
+                  : `= ${percent.trim()}% of ${base.trim()}`}
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -142,12 +233,7 @@ const WhatPercentCard = () => {
       return;
     }
 
-    const percent = (p / w) * 100;
-    const formatted = formatPercent(percent);
-    setResult({
-      value: formatted,
-      explanation: `${p} is ${formatted} of ${w}`,
-    });
+    setResult({ value: formatPercent((p / w) * 100) });
   };
 
   const clear = () => {
@@ -162,15 +248,12 @@ const WhatPercentCard = () => {
 
   return (
     <CalculatorFrame
-      title="What Percentage?"
-      description="X is what % of Y?"
+      title="What percentage"
       result={result}
       onClear={clear}
       answerPlaceholder="0%"
     >
-      <div
-        className={`flex flex-wrap items-center justify-center gap-2 ${sentenceTextClass}`}
-      >
+      <div className={compactSentenceClass}>
         <Input
           aria-label="Part value"
           aria-invalid={partInvalid}
@@ -179,7 +262,7 @@ const WhatPercentCard = () => {
           step="any"
           value={part}
           onChange={(e) => setPart(e.target.value)}
-          className={sentenceInputClass}
+          className={compactInputClass}
           placeholder="0"
         />
         <span>is what % of</span>
@@ -191,7 +274,7 @@ const WhatPercentCard = () => {
           step="any"
           value={whole}
           onChange={(e) => setWhole(e.target.value)}
-          className={sentenceInputClass}
+          className={compactInputClass}
           placeholder="0"
         />
         <span>?</span>
@@ -233,12 +316,9 @@ const PercentageChangeCard = () => {
     }
 
     const pct = ((b - a) / a) * 100;
-    const direction = pct > 0 ? "up" : "down";
-    const formatted = formatPercent(Math.abs(pct));
     setResult({
-      value: formatted,
-      direction,
-      explanation: `${formatted} ${pct > 0 ? "increase" : "decrease"} from ${a} to ${b}`,
+      value: formatPercent(Math.abs(pct)),
+      direction: pct > 0 ? "up" : "down",
     });
   };
 
@@ -254,15 +334,14 @@ const PercentageChangeCard = () => {
 
   return (
     <CalculatorFrame
-      title="Percentage Change"
-      description="Percentage change from X to Y"
+      title="Percentage change"
       result={result}
       onClear={clear}
       answerPlaceholder="0%"
     >
-      <div className="mx-auto flex w-full max-w-xs flex-col gap-2.5">
-        <div className={`flex items-center gap-2 ${sentenceTextClass}`}>
-          <span className="w-14 text-sm">From</span>
+      <div className="mx-auto flex w-full flex-col gap-2.5">
+        <div className="flex items-center gap-2 text-stone-600 dark:text-stone-400">
+          <span className="w-12 text-sm">From…</span>
           <Input
             aria-label="From value"
             aria-invalid={fromInvalid}
@@ -275,8 +354,8 @@ const PercentageChangeCard = () => {
             placeholder="Start"
           />
         </div>
-        <div className={`flex items-center gap-2 ${sentenceTextClass}`}>
-          <span className="w-14 text-sm">to</span>
+        <div className="flex items-center gap-2 text-stone-600 dark:text-stone-400">
+          <span className="w-12 text-sm">to…</span>
           <Input
             aria-label="To value"
             aria-invalid={toInvalid}
@@ -326,12 +405,7 @@ const FindTotalCard = () => {
       return;
     }
 
-    const total = v / (p / 100);
-    const formatted = formatNumber(total);
-    setResult({
-      value: formatted,
-      explanation: `${v} is ${p}% of ${formatted}`,
-    });
+    setResult({ value: formatNumber(v / (p / 100)) });
   };
 
   const clear = () => {
@@ -346,15 +420,12 @@ const FindTotalCard = () => {
 
   return (
     <CalculatorFrame
-      title="Find Total of..."
-      description="X is Y% of what?"
+      title="Find total"
       result={result}
       onClear={clear}
       answerPlaceholder="0"
     >
-      <div
-        className={`flex flex-wrap items-center justify-center gap-2 ${sentenceTextClass}`}
-      >
+      <div className={compactSentenceClass}>
         <Input
           aria-label="Known value"
           aria-invalid={valueInvalid}
@@ -363,7 +434,7 @@ const FindTotalCard = () => {
           step="any"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className={sentenceInputClass}
+          className={compactInputClass}
           placeholder="0"
         />
         <span>is</span>
@@ -375,7 +446,7 @@ const FindTotalCard = () => {
           step="any"
           value={percent}
           onChange={(e) => setPercent(e.target.value)}
-          className={sentenceInputClass}
+          className={compactInputClass}
           placeholder="0"
         />
         <span>% of what?</span>
@@ -419,19 +490,11 @@ const PercentageDifferenceCard = () => {
 
     const base = Math.min(Math.abs(v1), Math.abs(v2));
     if (base === 0) {
-      setResult({
-        value: "∞%",
-        explanation: `Difference between ${v1} and ${v2} relative to the smaller value is infinite`,
-      });
+      setResult({ value: "∞%" });
       return;
     }
 
-    const diff = (Math.abs(v1 - v2) / base) * 100;
-    const formatted = formatPercent(diff);
-    setResult({
-      value: formatted,
-      explanation: `Difference between ${v1} and ${v2} relative to the smaller value is ${formatted}`,
-    });
+    setResult({ value: formatPercent((Math.abs(v1 - v2) / base) * 100) });
   };
 
   const clear = () => {
@@ -446,13 +509,12 @@ const PercentageDifferenceCard = () => {
 
   return (
     <CalculatorFrame
-      title="Percentage Difference"
-      description="Difference between A and B"
+      title="Difference"
       result={result}
       onClear={clear}
       answerPlaceholder="0%"
     >
-      <div className="mx-auto flex w-full max-w-xs flex-col gap-2.5">
+      <div className="grid w-full grid-cols-2 gap-2">
         <Input
           aria-label="Value A"
           aria-invalid={aInvalid}
@@ -461,7 +523,7 @@ const PercentageDifferenceCard = () => {
           step="any"
           value={a}
           onChange={(e) => setA(e.target.value)}
-          className="text-center text-lg"
+          className="w-full text-center text-lg"
           placeholder="Value A"
         />
         <Input
@@ -472,7 +534,7 @@ const PercentageDifferenceCard = () => {
           step="any"
           value={b}
           onChange={(e) => setB(e.target.value)}
-          className="text-center text-lg"
+          className="w-full text-center text-lg"
           placeholder="Value B"
         />
       </div>
@@ -514,11 +576,9 @@ const ValueChangeCard = () => {
     }
 
     const multiplier = operator === "increase" ? 1 + p / 100 : 1 - p / 100;
-    const value = s * multiplier;
-    const formatted = formatNumber(value);
     setResult({
-      value: formatted,
-      explanation: `${s} ${verb} by ${p}% is ${formatted}`,
+      value: formatNumber(s * multiplier),
+      explanation: `${s} ${verb} by ${p}% is ${formatNumber(s * multiplier)}`,
     });
   };
 
@@ -535,13 +595,12 @@ const ValueChangeCard = () => {
 
   return (
     <CalculatorFrame
-      title="Increase/Decrease Value"
-      description="X ± Y% equals what?"
+      title="Increase or decrease"
       result={result}
       onClear={clear}
       answerPlaceholder="0"
     >
-      <div className="mx-auto flex w-full max-w-xs flex-col gap-2.5">
+      <div className="mx-auto flex w-full flex-col gap-2.5">
         <Input
           aria-label="Start value"
           aria-invalid={startInvalid}
@@ -562,7 +621,7 @@ const ValueChangeCard = () => {
             <SelectItem value="decrease">Decrease by</SelectItem>
           </SelectContent>
         </Select>
-        <div className={`flex items-center gap-2 ${sentenceTextClass}`}>
+        <div className="flex items-center gap-2 text-stone-600 dark:text-stone-400">
           <Input
             aria-label="Percent change"
             aria-invalid={percentInvalid}
@@ -582,8 +641,8 @@ const ValueChangeCard = () => {
 };
 
 export {
+  FeaturedCalculator,
   FindTotalCard,
-  PercentOfCard,
   PercentageChangeCard,
   PercentageDifferenceCard,
   ValueChangeCard,

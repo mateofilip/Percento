@@ -12,7 +12,7 @@
 - Single page. Static content (hero, formulas section, footer, all meta/JSON-LD) lives directly in `src/pages/index.astro`. Interactive React islands hydrate with `client:load`:
   - `src/components/PercentageCalculator.jsx` = the 6-card calculator grid
   - `src/components/StackInfo.jsx` = floating info button + modal
-- `src/components/ui/` = shadcn-style primitives (button, card, input, select; Radix select + cva). `src/components/calculator/` = the six card types plus shared chrome (`CalculatorFrame`, `AnswerDisplay`, `ResultRing`) and pure math/formatting in `utils.js`.
+- `src/components/ui/` = shadcn-style primitives (button, card, input, select; Radix select + cva). `src/components/calculator/` = the six card types plus shared chrome (`CalculatorFrame`, `AnswerDisplay`, `AnswerPanel`) and pure math/formatting in `utils.js`.
 - Global CSS is `src/styles.css`, imported only from `index.astro` (font faces, fixed grain/glow background decor, card-entry and ring animations, reduced-motion guards).
 
 ## Design system
@@ -27,8 +27,8 @@ Repo-local design skill: `.agents/skills/design-taste-frontend/SKILL.md`. Load i
 
 ## Gotchas
 
-- Result objects flow `{ value: string, explanation?, error?, placeholder?, direction? }` from `calculator/utils.js` (`formatNumber` / `formatPercent`, values are strings with 2-decimal formatting). `CalculatorFrame`'s copy button copies `result.value`; `AnswerDisplay` and `ResultRing` render it. Change the shape or formatting only in `utils.js` plus both consumers.
-- The "Percentage of" card is the featured cell: `md:col-span-2 lg:row-span-2` with the live `ResultRing`. The grid must stay exactly full (6 cards, 9 cells at lg) with no empty cells.
+- Result objects flow `{ value: string, explanation?, error?, placeholder?, direction? }` from `calculator/utils.js` (`formatNumber` / `formatPercent`, values are strings with 2-decimal formatting). `CalculatorFrame`'s copy button copies `result.value`; `AnswerDisplay` and `AnswerPanel` render it. Change the shape or formatting only in `utils.js` plus both consumers.
+- The "Percentage of" card is the featured cell: `md:col-span-2 lg:row-span-2`, side-by-side inputs + quick-example chips + the big `AnswerPanel` (`showAnswer={false}` on `CalculatorFrame`). The grid must stay exactly full (6 cards, 9 cells at lg) with no empty cells.
 - Use `min-h-dvh` for viewport sizing, never `h-screen`.
 - Deployed on Vercel (site URL in `astro.config.mjs`; repo `mateofilip/Percento`). SEO artifacts live in `public/` (`robots.txt`, `sitemap.xml`, `site.png`, `favicon.png`) and `index.astro` metas (OG/twitter, theme-color, canonical, JSON-LD); keep them in sync when redesigning.
 - `dist/` and `.astro/` are generated and gitignored.

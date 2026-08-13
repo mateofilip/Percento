@@ -12,6 +12,14 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: JetBrains Mono;
+  src: url("/JetBrainsMono[wght].woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 html {
   font-family: OpenRunde, system-ui, sans-serif;
 }
@@ -108,21 +116,11 @@ body::after {
   }
 }
 
-/* Result ring: springy ease on dash offset when the value changes. */
-.ring-progress {
-  transition: stroke-dashoffset 800ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: stroke-dashoffset;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .calculator-grid-enter > * {
     animation: none;
     opacity: 1;
     transform: none;
     filter: none;
-  }
-
-  .ring-progress {
-    transition: none;
   }
 }

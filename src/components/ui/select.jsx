@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 
+import { CaretDown, Check } from "@phosphor-icons/react";
+
 import { cn } from "../../lib/utils";
 
 const Select = SelectPrimitive.Root;
@@ -14,26 +16,19 @@ const SelectTrigger = React.forwardRef(
     <SelectPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex h-11 w-full items-center justify-between rounded-xl border border-stone-300 bg-white px-3 py-2 text-base font-medium text-stone-900 shadow-sm shadow-black/[0.03] tabular-nums transition-all duration-200 ring-offset-stone-50 hover:border-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:ring-offset-2 data-[placeholder]:text-stone-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-stone-700 dark:bg-stone-950/50 dark:text-stone-100 dark:shadow-none dark:ring-offset-stone-950 dark:hover:border-stone-600 dark:focus:ring-orange-400/30 dark:data-[placeholder]:text-stone-400",
+        "group/select flex h-12 w-full items-center justify-between rounded-xl border border-stone-300 bg-white px-4 py-2 text-base font-semibold text-stone-900 shadow-sm shadow-black/[0.03] tabular-nums transition-all duration-200 hover:border-stone-400 hover:shadow-md hover:shadow-black/[0.05] focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:shadow-[0_4px_14px_-4px_rgba(249,115,22,0.3)] data-[placeholder]:text-stone-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-stone-700 dark:bg-stone-950/60 dark:text-stone-100 dark:shadow-none dark:hover:border-stone-600 dark:focus:border-orange-400 dark:focus:ring-orange-400/30 dark:focus:shadow-[0_4px_14px_-4px_rgba(251,146,60,0.25)] dark:data-[placeholder]:text-stone-400",
         className
       )}
       {...props}
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          className="h-4 w-4 text-stone-500 dark:text-stone-400"
+        <CaretDown
+          size={14}
+          weight="bold"
+          className="shrink-0 text-stone-500 transition-transform duration-200 group-data-[state=open]/select:-rotate-180 dark:text-stone-400"
           aria-hidden="true"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.24 4.5a.75.75 0 0 1-1.08 0l-4.24-4.5a.75.75 0 0 1 .02-1.06Z"
-            clipRule="evenodd"
-          />
-        </svg>
+        />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   )
@@ -47,19 +42,19 @@ const SelectContent = React.forwardRef(
       <SelectPrimitive.Content
         ref={ref}
         className={cn(
-          "relative z-50 min-w-[8rem] overflow-hidden rounded-2xl border border-stone-200 bg-white p-1 shadow-xl shadow-stone-900/10 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border-stone-700 dark:bg-stone-900 dark:shadow-black/40",
+          "relative z-50 overflow-hidden rounded-2xl border border-stone-200 bg-white p-1 shadow-xl shadow-stone-900/10 data-[state=open]:animate-select-in data-[state=closed]:animate-select-out dark:border-stone-700 dark:bg-stone-900 dark:shadow-black/40",
           position === "popper" &&
-            "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+            "w-[var(--radix-select-trigger-width)] min-w-[8rem]",
           className
         )}
         position={position}
+        sideOffset={8}
         {...props}
       >
         <SelectPrimitive.Viewport
           className={cn(
             "p-0.5",
-            position === "popper" &&
-              "w-full min-w-[var(--radix-select-trigger-width)]"
+            position === "popper" && "w-full"
           )}
         >
           {children}
@@ -92,21 +87,8 @@ const SelectItem = React.forwardRef(
       {...props}
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-      <SelectPrimitive.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-orange-600 dark:text-orange-400">
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 15 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
-            fill="currentColor"
-            fillRule="evenodd"
-            clipRule="evenodd"
-          ></path>
-        </svg>
+      <SelectPrimitive.ItemIndicator className="absolute right-2.5 inline-flex items-center justify-center text-orange-600 dark:text-orange-400">
+        <Check size={15} weight="bold" aria-hidden="true" />
       </SelectPrimitive.ItemIndicator>
     </SelectPrimitive.Item>
   )
