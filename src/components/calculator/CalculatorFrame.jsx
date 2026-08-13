@@ -143,9 +143,9 @@ const CalculatorFrame = ({
   return (
     <div className="flex h-full flex-col rounded-3xl border border-stone-200/80 bg-white p-5 shadow-sm shadow-stone-900/5 transition-all duration-200 ease-out hover:border-stone-300/80 hover:shadow-lg hover:shadow-stone-900/10 dark:border-stone-800 dark:bg-stone-900 dark:shadow-black/20 dark:hover:border-stone-700 dark:hover:shadow-black/40">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-semibold tracking-tight text-stone-900 dark:text-stone-100">
+        <h2 className="text-sm font-semibold tracking-tight text-stone-900 dark:text-stone-100">
           {title}
-        </h3>
+        </h2>
         <div className="flex shrink-0 items-center gap-1">
           <IconSwapButton
             disabled={!canCopy}

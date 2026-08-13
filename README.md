@@ -1,6 +1,6 @@
 # Percento
 
-![Percento social preview](./public/site.png)
+![Percento social preview](./public/site.jpg)
 
 Percento is a fast, minimal percentage calculator app with six tools side-by-side for instant answers.
 

@@ -613,7 +613,7 @@ const ValueChangeCard = () => {
           placeholder="Start value"
         />
         <Select value={operator} onValueChange={setOperator}>
-          <SelectTrigger aria-label="Operation">
+          <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

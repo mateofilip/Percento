@@ -8,6 +8,7 @@ export default function StackInfo() {
   const closeTimeoutRef = useRef(null);
   const triggerRef = useRef(null);
   const closeButtonRef = useRef(null);
+  const modalRef = useRef(null);
   const previouslyFocusedElementRef = useRef(null);
 
   const modalId = "tech-stack-modal";
@@ -53,7 +54,28 @@ export default function StackInfo() {
     closeButtonRef.current?.focus();
 
     const onKeyDown = (event) => {
-      if (event.key === "Escape") close();
+      if (event.key === "Escape") {
+        close();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        const focusables = modalRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusables || focusables.length === 0) return;
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          last.focus();
+          event.preventDefault();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          first.focus();
+          event.preventDefault();
+        }
+      }
     };
     document.addEventListener("keydown", onKeyDown);
 
@@ -96,6 +118,7 @@ export default function StackInfo() {
         >
           <div
             id={modalId}
+            ref={modalRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}

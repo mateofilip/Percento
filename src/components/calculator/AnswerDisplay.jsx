@@ -145,7 +145,7 @@ const AnswerDisplay = ({ result, placeholderValue = "0" }) => {
             aria-atomic="true"
             className={`overflow-hidden whitespace-nowrap text-clip font-semibold tabular-nums leading-none transition-transform duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none ${
               isPlaceholder
-                ? "text-stone-300 dark:text-stone-600"
+                ? "text-stone-400 dark:text-stone-500"
                 : `text-stone-900 dark:text-stone-100 ${
                     isBumping ? "scale-105" : "scale-100"
                   }`

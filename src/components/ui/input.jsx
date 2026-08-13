@@ -4,8 +4,8 @@ import { cn } from "../../lib/utils";
 
 const variantClasses = {
   light:
-    "border-b border-stone-300 text-stone-900 caret-orange-600 selection:bg-orange-500/20 placeholder:text-stone-400 hover:border-stone-400 focus-visible:border-orange-500 aria-invalid:border-red-500 dark:border-stone-600 dark:text-stone-100 dark:caret-orange-400 dark:selection:bg-orange-400/20 dark:placeholder:text-stone-500 dark:hover:border-stone-500 dark:focus-visible:border-orange-400 dark:aria-invalid:border-red-400",
-  dark: "border-b border-white/25 text-white caret-orange-200 selection:bg-white/25 placeholder:text-white/40 hover:border-white/40 focus-visible:border-white aria-invalid:border-red-400",
+    "border-b border-stone-300 text-stone-900 caret-orange-600 selection:bg-orange-500/20 placeholder:text-stone-500 hover:border-stone-400 focus-visible:border-orange-500 aria-invalid:border-red-500 dark:border-stone-600 dark:text-stone-100 dark:caret-orange-400 dark:selection:bg-orange-400/20 dark:placeholder:text-stone-500 dark:hover:border-stone-500 dark:focus-visible:border-orange-400 dark:aria-invalid:border-red-400",
+  dark: "border-b border-white/25 text-white caret-orange-200 selection:bg-white/25 placeholder:text-white/60 hover:border-white/40 focus-visible:border-white aria-invalid:border-red-400",
 };
 
 const Input = React.forwardRef(
