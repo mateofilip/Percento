@@ -117,7 +117,7 @@ export default function StackInfo() {
                 ref={closeButtonRef}
                 type="button"
                 onClick={close}
-                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2 dark:hover:bg-stone-800 dark:hover:text-stone-100"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-stone-400 transition-colors duration-200 hover:bg-stone-100 hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2 dark:hover:bg-stone-800 dark:hover:text-stone-100"
                 aria-label="Close"
               >
                 <X size={18} />
@@ -127,7 +127,7 @@ export default function StackInfo() {
               {stack.map((item) => (
                 <li
                   key={item.name}
-                  className="flex items-center justify-between rounded-2xl border border-stone-200/70 bg-stone-50 px-4 py-3 transition-colors hover:bg-stone-100 dark:border-stone-800 dark:bg-stone-950/40 dark:hover:bg-stone-800/60"
+                  className="flex items-center justify-between rounded-2xl border border-stone-200/70 bg-stone-50 px-4 py-3 transition-colors duration-50 hover:bg-stone-100 dark:border-stone-800 dark:bg-stone-950/40 dark:hover:bg-stone-800/60"
                 >
                   <span className="text-sm font-semibold text-stone-900 dark:text-stone-100">
                     {item.name}

@@ -103,7 +103,7 @@ const IconSwapButton = ({
         <span className="relative h-4 w-4">
           <DefaultIcon
             size={16}
-            className={`absolute inset-0 transition-all duration-150 ${
+            className={`absolute inset-0 transition-all duration-200 ${
               isDone ? "scale-75 opacity-0" : "scale-100 opacity-100"
             }`}
           />
@@ -111,7 +111,7 @@ const IconSwapButton = ({
             key={nonce}
             size={16}
             weight="bold"
-            className={`absolute inset-0 text-current transition-all duration-150 ${
+            className={`absolute inset-0 text-current transition-all duration-200 ${
               isDone ? "scale-100 opacity-100" : "scale-75 opacity-0"
             }`}
           />
@@ -141,8 +141,8 @@ const CalculatorFrame = ({
     typeof result?.value === "string";
 
   return (
-    <div className="flex h-full flex-col rounded-3xl border border-stone-200/80 bg-white p-5 shadow-sm shadow-stone-900/5 transition-all duration-300 ease-out hover:border-stone-300/80 hover:shadow-xl hover:shadow-stone-900/10 dark:border-stone-800 dark:bg-stone-900 dark:shadow-black/20 dark:hover:border-stone-700 dark:hover:shadow-black/40">
-      <div className="flex items-start justify-between gap-3">
+    <div className="flex h-full flex-col rounded-3xl border border-stone-200/80 bg-white p-5 shadow-sm shadow-stone-900/5 transition-all duration-200 ease-out hover:border-stone-300/80 hover:shadow-lg hover:shadow-stone-900/10 dark:border-stone-800 dark:bg-stone-900 dark:shadow-black/20 dark:hover:border-stone-700 dark:hover:shadow-black/40">
+      <div className="flex items-center justify-between gap-3">
         <h3 className="text-sm font-semibold tracking-tight text-stone-900 dark:text-stone-100">
           {title}
         </h3>
