@@ -59,14 +59,18 @@ const IconSwapButton = ({
     const ok = await onAction();
     if (!ok) return;
 
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     setNonce((current) => current + 1);
-    setIsAnimating(true);
+    setIsAnimating(!reduce);
     setIsDone(true);
 
     if (animTimeoutRef.current) clearTimeout(animTimeoutRef.current);
     animTimeoutRef.current = setTimeout(() => {
       setIsAnimating(false);
-    }, 220);
+    }, 300);
 
     if (doneTimeoutRef.current) clearTimeout(doneTimeoutRef.current);
     doneTimeoutRef.current = setTimeout(() => {
@@ -103,22 +107,22 @@ const IconSwapButton = ({
         <span className="relative h-4 w-4">
           <DefaultIcon
             size={16}
-            className={`absolute inset-0 transition-all duration-200 ${
-              isDone ? "scale-75 opacity-0" : "scale-100 opacity-100"
-            }`}
+            className={`absolute inset-0 transition-all duration-200 motion-reduce:transition-none ${
+              isAnimating ? "animate-theme-out" : ""
+            } ${isDone ? "opacity-0" : "opacity-100"}`}
           />
           <Check
             key={nonce}
             size={16}
             weight="bold"
-            className={`absolute inset-0 text-current transition-all duration-200 ${
-              isDone ? "scale-100 opacity-100" : "scale-75 opacity-0"
-            }`}
+            className={`absolute inset-0 text-current transition-all duration-200 motion-reduce:transition-none ${
+              isAnimating ? "animate-theme-in" : ""
+            } ${isDone ? "opacity-100" : "opacity-0"}`}
           />
         </span>
       </Button>
       <span className="pointer-events-none absolute right-0 bottom-full z-50 mb-2 w-max max-w-56 translate-y-1 whitespace-nowrap opacity-0 transition-all duration-200 ease-out group-hover/tooltip:translate-y-0 group-hover/tooltip:opacity-100 group-hover/tooltip:delay-200">
-        <span className="relative block rounded-xl border border-stone-800 bg-stone-900 p-2 text-xs font-semibold text-white shadow-lg dark:border-stone-200 dark:bg-white dark:text-stone-900">
+        <span className="relative block rounded-xl border border-stone-800 bg-stone-900 p-2 text-xs font-semibold text-white shadow-lg dark:border-stone-200 dark:bg-white dark:text-neutral-900">
           {tooltipText}
           <span className="absolute -bottom-1 right-3 h-2 w-2 rotate-45 rounded-[3px] border-b border-r border-stone-800 bg-stone-900 dark:border-stone-200 dark:bg-white" />
         </span>

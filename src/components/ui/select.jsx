@@ -42,7 +42,7 @@ const SelectContent = React.forwardRef(
       <SelectPrimitive.Content
         ref={ref}
         className={cn(
-          "relative z-50 overflow-hidden rounded-2xl border border-stone-200 bg-white p-1 shadow-xl shadow-stone-900/10 data-[state=open]:animate-select-in data-[state=closed]:animate-select-out dark:border-stone-700 dark:bg-stone-900 dark:shadow-black/40",
+          "relative z-50 overflow-hidden rounded-2xl border border-stone-200 bg-white p-1 shadow-xl shadow-stone-900/10 data-[state=open]:animate-select-in data-[state=closed]:animate-select-out dark:border-stone-700 dark:bg-neutral-900 dark:shadow-black/40",
           position === "popper" &&
             "w-[var(--radix-select-trigger-width)] min-w-[8rem]",
           className

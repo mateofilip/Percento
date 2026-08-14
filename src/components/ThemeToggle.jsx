@@ -63,7 +63,7 @@ const ThemeToggle = () => {
       type="button"
       onClick={cycle}
       aria-label={`Theme: ${label}. Click to switch to ${nextLabel}.`}
-      className="fixed bottom-5 left-5 z-[60] flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-stone-200/80 bg-white/80 text-stone-500 shadow-lg shadow-stone-900/10 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-stone-900 hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-700/80 dark:bg-stone-900/80 dark:text-stone-400 dark:shadow-black/30 dark:hover:bg-stone-900 dark:hover:text-stone-100 dark:focus-visible:ring-offset-stone-950"
+      className="fixed bottom-5 left-5 z-[60] flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-stone-200/80 bg-white/80 text-stone-500 shadow-lg shadow-stone-900/10 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-stone-900 hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-700/80 dark:bg-neutral-900/80 dark:text-stone-400 dark:shadow-black/30 dark:hover:bg-neutral-900 dark:hover:text-stone-100 dark:focus-visible:ring-offset-stone-950"
     >
       <span className="relative h-5 w-5">
         {swapping && prevMode && (

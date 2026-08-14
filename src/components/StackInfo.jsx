@@ -100,7 +100,7 @@ export default function StackInfo() {
         onClick={() => (isOpen ? close() : open())}
         aria-expanded={isOpen}
         aria-controls={modalId}
-        className={`fixed bottom-5 right-5 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-stone-200/80 bg-white/80 text-stone-500 shadow-lg shadow-stone-900/10 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-stone-900 hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-700/80 dark:bg-stone-900/80 dark:text-stone-400 dark:shadow-black/30 dark:hover:bg-stone-900 dark:hover:text-stone-100 dark:focus-visible:ring-offset-stone-950 ${
+        className={`fixed bottom-5 right-5 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-stone-200/80 bg-white/80 text-stone-500 shadow-lg shadow-stone-900/10 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-stone-900 hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:border-stone-700/80 dark:bg-neutral-900/80 dark:text-stone-400 dark:shadow-black/30 dark:hover:bg-neutral-900 dark:hover:text-stone-100 dark:focus-visible:ring-offset-stone-950 ${
           isOpen ? "z-[80]" : "z-[60]"
         }`}
         aria-label="View Tech Stack"
@@ -122,7 +122,7 @@ export default function StackInfo() {
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className={`w-full max-w-sm rounded-3xl border border-stone-200 bg-white p-6 shadow-2xl shadow-stone-900/15 transform-gpu transition-all duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none dark:border-stone-800 dark:bg-stone-900 dark:shadow-black/50 ${
+            className={`w-full max-w-sm rounded-3xl border border-stone-200 bg-white p-6 shadow-2xl shadow-stone-900/15 transform-gpu transition-all duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none dark:border-stone-800 dark:bg-neutral-900 dark:shadow-black/50 ${
               isOpen
                 ? "opacity-100 translate-y-0 scale-100"
                 : "opacity-0 translate-y-2 scale-95"
